@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+#Build files
+*.o
+*.exe
+*.win
+
+#Others
+.vscode/
