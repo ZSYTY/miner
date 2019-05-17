@@ -1,7 +1,7 @@
 [Project]
 FileName=graphics.dev
 Name=graphics
-UnitCount=15
+UnitCount=18
 Type=0
 Ver=2
 ObjFiles=
@@ -170,9 +170,6 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit16]
-FileName=igp.c
-
 [Unit1]
 FileName=include\exception.h
 CompileCpp=0
@@ -194,6 +191,36 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
+FileName=src\utils.c
+CompileCpp=0
+Folder=graphics
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit16]
+FileName=src\start.c
+CompileCpp=0
+Folder=graphics
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=src\game.c
+CompileCpp=0
+Folder=graphics
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit18]
 FileName=miner.c
 CompileCpp=0
 Folder=graphics

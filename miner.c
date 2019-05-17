@@ -14,6 +14,13 @@
 #include <ocidl.h>
 #include <winuser.h>
 
+#include "utils.h"
+#include "start.h"
+#include "game.h"
+
 void Main() {
+    SetWindowTitle("»Æ½ð¿ó¹¤");
 	InitGraphics();
+    double width = GetWindowWidth(), height = GetWindowHeight();
+    initStartPage(width, height);
 }
