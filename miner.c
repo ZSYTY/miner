@@ -20,7 +20,7 @@
 
 void Main() {
     SetWindowTitle("»Æ½ð¿ó¹¤");
-	InitGraphics();
+    InitGraphics();
     double width = GetWindowWidth(), height = GetWindowHeight();
     initStartPage(width, height);
 }

@@ -4,4 +4,4 @@
 void initStartPage(double width, double height);
 void startGame();
 void resumeGame();
-void exitGame();
+void quitGame();

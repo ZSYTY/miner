@@ -21,3 +21,15 @@ button* createButton(double x, double y, double width, double height, char text[
 void drawButton(button* b);
 void enableButton(button *b);
 void disableButton(button *b);
+
+
+typedef struct link {
+    button* bt;
+    struct link* next;
+} linkNode;
+
+typedef linkNode* linkHead;
+
+void insButton(button *bt);
+linkNode* newNode();
+void globalCallBack(int x, int y, int button, int event);

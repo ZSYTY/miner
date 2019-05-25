@@ -15,6 +15,7 @@ void drawCircle(double x, double y, double r) {
     DrawArc(r, 0, 360);
 }
 
+
 button *createButton(double x, double y, double width, double height, char text[], buttonClickCallBack cb) {
     button *b = malloc(sizeof(button));
     b->x = x;
@@ -39,4 +40,36 @@ void enableButton(button *b) {
 
 void disableButton(button *b) {
     b->disabled = TRUE;
+}
+
+bool isIn(button *b, int xi, int yi) {
+    double x = ScaleXInches(xi), y = ScaleYInches(yi);
+    return x >= b->x && x <= b->x + b->width && y >= b->y && y <= b->y + b->height;
+}
+
+
+linkHead ButtonList = NULL;
+
+void insButton(button *bt) {
+    linkNode* head = newNode();
+    head->bt = bt;
+    head->next = ButtonList;
+    ButtonList = head;
+}
+
+linkNode* newNode() {
+    return (linkNode *)malloc(sizeof(linkNode));
+}
+
+void globalCallBack(int x, int y, int button, int event) {
+    if (button != LEFT_BUTTON || event != BUTTON_DOWN) {
+        return;
+    }
+    linkNode* p = ButtonList;
+    while (p != NULL) {
+        if (! p->bt->disabled && isIn(p->bt, x, y)) {
+            (*p->bt->callback)();
+        }
+        p = p->next;
+    }
 }
