@@ -15,6 +15,16 @@ void drawCircle(double x, double y, double r) {
     DrawArc(r, 0, 360);
 }
 
+void clearScreen() {
+    string preColor = GetPenColor();
+    SetPenColor("White");
+
+    StartFilledRegion(1);
+    drawRectangle(0, 0, GetWindowWidth(), GetWindowHeight());
+    EndFilledRegion();
+    
+    SetPenColor(preColor);   
+}
 
 button *createButton(double x, double y, double width, double height, char text[], buttonClickCallBack cb) {
     button *b = malloc(sizeof(button));
