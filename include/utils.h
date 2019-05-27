@@ -27,14 +27,15 @@ void disableButton(button *b);
 
 
 typedef struct link {
-    button* bt;
-    struct link* next;
+    void* data;
+    struct link *pre, *next;
 } linkNode;
 
 typedef linkNode* linkHead;
 
-void insButton(button *bt);
+linkHead insNode(linkHead head, void *data);
 linkNode* newNode();
-void globalCallBack(int x, int y, int button, int event);
+void buttonCallBack(int x, int y, int button, int event);
+void insButton(button *b);
 
 #endif

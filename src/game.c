@@ -1,11 +1,20 @@
 #include "game.h"
 #include "utils.h"
+#include "random.h"
 #include "graphics.h"
 #include "extgraph.h"
 
-void initGame() {
-    clearScreen();
+static int score;
 
+void generateGold() {
+
+}
+
+void drawGold() {
+    
+}
+
+void displayBoard() {
     double width = GetWindowWidth();
     double height = GetWindowHeight();
 
@@ -16,4 +25,20 @@ void initGame() {
     double minerHeight = 0.8;
 
     drawRectangle(width / 2 - minerWidth / 2, height / 5 * 4, minerWidth, minerHeight);
+
+    generateGold();
+    drawGold();
+}
+
+void displayState() {
+    static char stateText[MAX_TEXT_LENGTH + 1];
+    sprintf(stateText, "当前分数：%d", score);
+    MovePen(0, 0.1);
+    DrawTextString(stateText);
+}
+
+void initGame() {
+    clearScreen();
+    displayBoard();
+    displayState();
 }

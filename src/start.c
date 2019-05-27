@@ -3,6 +3,7 @@
 #include "utils.h"
 
 static button *start = NULL, *resume = NULL, *quit = NULL;
+static linkHead buttonList;
 
 void enableAll() {
     enableButton(start);
@@ -34,7 +35,7 @@ void initStartPage() {
     drawButton(quit);
     insButton(quit);
 
-    registerMouseEvent(globalCallBack);
+    registerMouseEvent(buttonCallBack);
     enableAll();
 }
 

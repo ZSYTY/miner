@@ -4,6 +4,13 @@
 #include "graphics.h"
 #include "extgraph.h"
 
+typedef enum {SMALL, MEDIUM, LARGE} goldType;
+
+typedef struct {
+    double x, y;
+    goldType type;
+} gold;
+
 void initGame();
 
 #endif

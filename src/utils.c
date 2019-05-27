@@ -57,29 +57,38 @@ bool isIn(button *b, int xi, int yi) {
     return x >= b->x && x <= b->x + b->width && y >= b->y && y <= b->y + b->height;
 }
 
-
-linkHead ButtonList = NULL;
-
-void insButton(button *bt) {
-    linkNode* head = newNode();
-    head->bt = bt;
-    head->next = ButtonList;
-    ButtonList = head;
+linkHead insNode(linkHead head, void *data) {
+    linkNode* newHead = newNode();
+    newHead->data = data;
+    newHead->next = head;
+    if (head != NULL) {
+        head->pre = newHead;
+    }
+    return newHead;
 }
 
 linkNode* newNode() {
-    return (linkNode *)malloc(sizeof(linkNode));
+    linkNode* head = (linkNode *)malloc(sizeof(linkNode));
+    head->pre = head->next = NULL;
+    return head;
 }
 
-void globalCallBack(int x, int y, int button, int event) {
-    if (button != LEFT_BUTTON || event != BUTTON_DOWN) {
+linkHead buttonList;
+
+void buttonCallBack(int x, int y, int bt, int event) {
+    if (bt != LEFT_BUTTON || event != BUTTON_DOWN) {
         return;
     }
-    linkNode* p = ButtonList;
+    linkNode* p = buttonList;
     while (p != NULL) {
-        if (! p->bt->disabled && isIn(p->bt, x, y)) {
-            (*p->bt->callback)();
+        button* currentButton = p->data;
+        if (! currentButton->disabled && isIn(p->data, x, y)) {
+            (*currentButton->callback)();
         }
         p = p->next;
     }
+}
+
+void insButton(button *b) {
+    buttonList = insNode(buttonList, b);
 }
