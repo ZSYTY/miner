@@ -4,9 +4,15 @@
 #include "graphics.h"
 #include "extgraph.h"
 
-typedef enum {SMALL, MEDIUM, LARGE} goldType;
+typedef enum
+{
+    SMALL,
+    MEDIUM,
+    LARGE
+} goldType;
 
-typedef struct {
+typedef struct
+{
     double x, y;
     goldType type;
 } gold;

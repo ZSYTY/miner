@@ -2,7 +2,8 @@
 #include "start.h"
 #include "game.h"
 
-void Main() {
+void Main()
+{
     SetWindowTitle("»Æ½ð¿ó¹¤");
     InitGraphics();
     initStartPage();

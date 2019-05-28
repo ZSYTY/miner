@@ -6,18 +6,20 @@
 
 static int score;
 
-void generateGold() {
-
+void generateGold()
+{
 }
 
-void drawGold() {
-    
+void drawGold()
+{
 }
 
-void displayBoard() {
+void displayBoard()
+{
     double width = GetWindowWidth();
     double height = GetWindowHeight();
 
+    SetPenColor("Black");
     MovePen(0, height / 5 * 4);
     DrawLine(width, 0);
 
@@ -30,14 +32,16 @@ void displayBoard() {
     drawGold();
 }
 
-void displayState() {
+void displayState()
+{
     static char stateText[MAX_TEXT_LENGTH + 1];
     sprintf(stateText, "当前分数：%d", score);
     MovePen(0, 0.1);
     DrawTextString(stateText);
 }
 
-void initGame() {
+void initGame()
+{
     clearScreen();
     displayBoard();
     displayState();

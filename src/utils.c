@@ -2,7 +2,8 @@
 
 #include <string.h>
 
-void drawRectangle(double x, double y, double width, double height) {
+void drawRectangle(double x, double y, double width, double height)
+{
     MovePen(x, y);
     DrawLine(width, 0);
     DrawLine(0, height);
@@ -10,23 +11,26 @@ void drawRectangle(double x, double y, double width, double height) {
     DrawLine(0, -height);
 }
 
-void drawCircle(double x, double y, double r) {
+void drawCircle(double x, double y, double r)
+{
     MovePen(x + r, y);
     DrawArc(r, 0, 360);
 }
 
-void clearScreen() {
+void clearScreen()
+{
     string preColor = GetPenColor();
     SetPenColor("White");
 
     StartFilledRegion(1);
     drawRectangle(0, 0, GetWindowWidth(), GetWindowHeight());
     EndFilledRegion();
-    
-    SetPenColor(preColor);   
+
+    SetPenColor(preColor);
 }
 
-button *createButton(double x, double y, double width, double height, char text[], buttonClickCallBack cb) {
+button *createButton(double x, double y, double width, double height, char text[], buttonClickCallBack cb)
+{
     button *b = malloc(sizeof(button));
     b->x = x;
     b->y = y;
@@ -38,57 +42,89 @@ button *createButton(double x, double y, double width, double height, char text[
     return b;
 }
 
-void drawButton(button *b) {
+void drawButton(button *b)
+{
     drawRectangle(b->x, b->y, b->width, b->height);
     MovePen(b->x + b->width / 2 - TextStringWidth(b->text) / 2, b->y + b->height / 2);
     DrawTextString(b->text);
 }
 
-void enableButton(button *b) {
+void enableButton(button *b)
+{
     b->disabled = FALSE;
 }
 
-void disableButton(button *b) {
+void disableButton(button *b)
+{
     b->disabled = TRUE;
 }
 
-bool isIn(button *b, int xi, int yi) {
+bool isIn(button *b, int xi, int yi)
+{
     double x = ScaleXInches(xi), y = ScaleYInches(yi);
     return x >= b->x && x <= b->x + b->width && y >= b->y && y <= b->y + b->height;
 }
 
-linkHead insNode(linkHead head, void *data) {
-    linkNode* newHead = newNode();
+linkHead insNode(linkHead head, void *data)
+{
+    linkNode *newHead = newNode();
     newHead->data = data;
     newHead->next = head;
-    if (head != NULL) {
+    if (head != NULL)
+    {
         head->pre = newHead;
     }
     return newHead;
 }
 
-linkNode* newNode() {
-    linkNode* head = (linkNode *)malloc(sizeof(linkNode));
+linkHead delNode(linkHead head, linkNode *node)
+{
+    if (node->pre != NULL)
+    {
+        node->pre->next = node->next;
+    }
+    else
+    {
+        head = node->next;
+    }
+
+    if (node->next != NULL)
+    {
+        node->next->pre = node->pre;
+    }
+
+    free(node);
+    return head;
+}
+
+linkNode *newNode()
+{
+    linkNode *head = (linkNode *)malloc(sizeof(linkNode));
     head->pre = head->next = NULL;
     return head;
 }
 
 linkHead buttonList;
 
-void buttonCallBack(int x, int y, int bt, int event) {
-    if (bt != LEFT_BUTTON || event != BUTTON_DOWN) {
+void buttonCallBack(int x, int y, int bt, int event)
+{
+    if (bt != LEFT_BUTTON || event != BUTTON_DOWN)
+    {
         return;
     }
-    linkNode* p = buttonList;
-    while (p != NULL) {
-        button* currentButton = p->data;
-        if (! currentButton->disabled && isIn(p->data, x, y)) {
+    linkNode *p = buttonList;
+    while (p != NULL)
+    {
+        button *currentButton = p->data;
+        if (!currentButton->disabled && isIn(p->data, x, y))
+        {
             (*currentButton->callback)();
         }
         p = p->next;
     }
 }
 
-void insButton(button *b) {
+void insButton(button *b)
+{
     buttonList = insNode(buttonList, b);
 }
