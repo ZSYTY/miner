@@ -4,10 +4,14 @@
 #include "graphics.h"
 #include "extgraph.h"
 
-#define min(a, b) ((a) < (b) ? (a) : (b))
-#define max(a, b) ((a) > (b) ? (a) : (b))
+#include <math.h>
+#include <windows.h>
 
 static int score;
+static int state;
+#define WAITING 0
+#define DOWN 1
+#define UP 2
 static linkHead linkGold;
 extern double width, height;
 #define boardRatio (4.0 / 5)
@@ -143,21 +147,79 @@ void displayMap()
 #define pi 3.14159265
 #define cLength 0.3
 
-void runtimeCallback(int timerID)
+void moniter(int timerID)
 {
     static double theta = pi;
+    static double dTheta = 0.01;
+    static double dR = 0.05;
+    static double centerX;
+    static double centerY;    
     if (timerID == defaultTimer)
     {
-        double centerX = width * .5;
-        double centerY = height * boardRatio;
-        SetPenColor("Black");
-        SetEraseMode(TRUE);
-        drawVector(centerX, centerY, cLength, theta - pi / 8);
-        drawVector(centerX, centerY, cLength, theta + pi / 8);
-        theta += 0.01;
-        SetEraseMode(FALSE);
-        drawVector(centerX, centerY, cLength, theta - pi / 8);
-        drawVector(centerX, centerY, cLength, theta + pi / 8);
+        double dx, dy;
+        switch (state)
+        {
+        case WAITING:
+            centerX = width * .5;
+            centerY = height * boardRatio;
+            SetPenColor("Black");
+            SetEraseMode(TRUE);
+            drawVector(centerX, centerY, cLength, theta - pi / 8);
+            drawVector(centerX, centerY, cLength, theta + pi / 8);
+            dTheta -= 0.001 * cos(theta);
+            theta += dTheta;
+            SetEraseMode(FALSE);
+            drawVector(centerX, centerY, cLength, theta - pi / 8);
+            drawVector(centerX, centerY, cLength, theta + pi / 8);
+            displayBoard();
+            break;
+
+        case DOWN:
+            SetPenColor("Black");
+            SetEraseMode(TRUE);
+            drawVector(centerX, centerY, cLength, theta - pi / 8);
+            drawVector(centerX, centerY, cLength, theta + pi / 8);
+            dx = dR * cos(theta), dy = dR * sin(theta);
+            MovePen(centerX, centerY);
+            centerX += dx;
+            centerY += dy;
+            SetEraseMode(FALSE);
+            DrawLine(dx, dy);
+            drawVector(centerX, centerY, cLength, theta - pi / 8);
+            drawVector(centerX, centerY, cLength, theta + pi / 8);
+            if (centerX <= 0 || centerX >= width || centerY <= 0)
+            {
+                state = UP;
+            }
+            break;
+
+        case UP:
+            SetPenColor("Black");
+            SetEraseMode(TRUE);
+            drawVector(centerX, centerY, cLength, theta - pi / 8);
+            drawVector(centerX, centerY, cLength, theta + pi / 8);
+            dx = dR * cos(theta), dy = dR * sin(theta);
+            MovePen(centerX, centerY);
+            DrawLine(dx, dy);
+            centerX -= dx;
+            centerY -= dy;
+            SetEraseMode(FALSE);
+            drawVector(centerX, centerY, cLength, theta - pi / 8);
+            drawVector(centerX, centerY, cLength, theta + pi / 8);            
+            if (centerY >= height * boardRatio)
+            {
+                state = WAITING;
+            }
+            break;
+        }
+    }
+}
+
+void handler(int key, int event)
+{
+    if (key == VK_DOWN && event == KEY_DOWN && state == WAITING)
+    {
+        state = DOWN;
     }
 }
 
@@ -170,6 +232,8 @@ void initGame()
     displayBoard();
     displayState();
     displayMap();
-    registerTimerEvent(&runtimeCallback);
-    startTimer(defaultTimer, 10);
+
+    registerKeyboardEvent(&handler);
+    registerTimerEvent(&moniter);
+    startTimer(defaultTimer, 20);
 }
