@@ -11,6 +11,13 @@ void drawRectangle(double x, double y, double width, double height)
     DrawLine(0, -height);
 }
 
+void drawFilledRect(double x, double y, double width, double height)
+{
+    StartFilledRegion(1);
+    drawRectangle(x, y, width, height);
+    EndFilledRegion();
+}
+
 void drawCircle(double x, double y, double r)
 {
     MovePen(x + r, y);

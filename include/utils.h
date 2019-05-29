@@ -6,6 +6,7 @@
 #include "extgraph.h"
 
 void drawRectangle(double x, double y, double width, double height);
+void drawFilledRect(double x, double y, double width, double height);
 void drawCircle(double x, double y, double r);
 void clearScreen();
 
