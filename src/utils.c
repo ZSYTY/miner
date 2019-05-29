@@ -1,5 +1,6 @@
 #include "utils.h"
 
+#include <math.h>
 #include <string.h>
 
 void drawRectangle(double x, double y, double width, double height)
@@ -22,6 +23,11 @@ void drawCircle(double x, double y, double r)
 {
     MovePen(x + r, y);
     DrawArc(r, 0, 360);
+}
+
+void drawVector(double x, double y, double r, double theta) {
+    MovePen(x, y);
+    DrawLine(r * cos(theta), r * sin(theta));
 }
 
 void clearScreen()

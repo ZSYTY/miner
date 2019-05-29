@@ -7,8 +7,5 @@
 *.win
 *.gch
 
-#Cache
-*.layout
-
 #Others
 .vscode/

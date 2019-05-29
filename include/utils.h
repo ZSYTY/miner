@@ -8,6 +8,7 @@
 void drawRectangle(double x, double y, double width, double height);
 void drawFilledRect(double x, double y, double width, double height);
 void drawCircle(double x, double y, double r);
+void drawVector(double x, double y, double r, double theta);
 void clearScreen();
 
 #define MAX_TEXT_LENGTH 80

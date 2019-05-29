@@ -177,11 +177,11 @@ void initStartPage()
     double buttonWidth = width / 4;
     double buttonHeight = 1;
 
-    start = createButton(width / 2, height / 2 + 0.5, buttonWidth, buttonHeight, "ï¿½ï¿½Ê¼ï¿½ï¿½Ï·", &startGame);
+    start = createButton(width / 2, height / 2 + 0.5, buttonWidth, buttonHeight, "¿ªÊ¼ÓÎÏ·", &startGame);
 
-    resume = createButton(width / 2 + 0.8, height / 2 - 0.5, buttonWidth, buttonHeight, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·", &resumeGame);
+    resume = createButton(width / 2 + 0.8, height / 2 - 0.5, buttonWidth, buttonHeight, "¼ÌÐøÓÎÏ·", &resumeGame);
 
-    quit = createButton(width / 2 + 1.6, height / 2 - 1.5, buttonWidth, buttonHeight, "ï¿½Ë³ï¿½ï¿½ï¿½Ï·", &quitGame);
+    quit = createButton(width / 2 + 1.6, height / 2 - 1.5, buttonWidth, buttonHeight, "ÍË³öÓÎÏ·", &quitGame);
 
     registerMouseEvent(buttonCallBack);
     insAll();
