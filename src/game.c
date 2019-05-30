@@ -269,6 +269,7 @@ void moniter(int timerID)
     case failureTimer:
         cancelTimer(failureTimer);
         disableButton(pause);
+        score = 0;
         initStartPage();
         break;
     }
