@@ -8,11 +8,15 @@
 #include <math.h>
 #include <windows.h>
 
+enum
+{
+    WAITING,
+    DOWN,
+    UP,
+    PAUSED
+};
 static int score, target, level, countdown;
 static int state;
-#define WAITING 0
-#define DOWN 1
-#define UP 2
 static linkHead linkGold;
 extern double width, height;
 #define boardRatio (4.0 / 5)
@@ -264,6 +268,7 @@ void moniter(int timerID)
 
     case failureTimer:
         cancelTimer(failureTimer);
+        disableButton(pause);
         initStartPage();
         break;
     }
@@ -279,7 +284,18 @@ void handler(int key, int event)
 
 void pauseGame()
 {
-
+    static int preState;
+    if (state == PAUSED)
+    {
+        state = preState;
+        startTimer(defaultTimer, refreshInterval);
+    }
+    else
+    {
+        preState = state;
+        state = PAUSED;
+        cancelTimer(defaultTimer);
+    }
 }
 
 void initButton()
