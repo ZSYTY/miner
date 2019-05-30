@@ -16,6 +16,7 @@
 void initColor();
 
 void drawRectangle(double x, double y, double width, double height);
+void drawRoundRectangle(double x, double y, double width, double height);
 void drawFilledRect(double x, double y, double width, double height);
 void drawCircle(double x, double y, double r);
 void drawVector(double r, double theta);

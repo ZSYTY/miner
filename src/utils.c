@@ -76,10 +76,25 @@ button *createButton(double x, double y, double width, double height, char text[
     return b;
 }
 
+void drawRoundRectangle(double x, double y, double w, double h)
+{
+    double r = 0.05;
+    MovePen(x + r, y);
+    DrawLine(w - r * 2, 0);
+    DrawArc(r, 270, 90);
+    DrawLine(0, h - r * 2);
+    DrawArc(r, 0, 90);
+    DrawLine(r * 2 - w, 0);
+    DrawArc(r, 90, 90);
+    DrawLine(0, r * 2 - h);
+    DrawArc(r, 180, 90);
+}
+
 void drawButton(button *b)
 {
-    drawRectangle(b->x, b->y, b->width, b->height);
-    MovePen(b->x + b->width / 2 - TextStringWidth(b->text) / 2, b->y + b->height / 2);
+    SetPenColor("Gray21");
+    drawRoundRectangle(b->x, b->y, b->width, b->height);
+    MovePen(b->x + b->width / 2 - TextStringWidth(b->text) / 2, b->y + b->height / 2 - 0.05);
     DrawTextString(b->text);
 }
 

@@ -22,6 +22,7 @@ static int ratioMap[GEM + 1] = {60, 25, 10, 25, 60};
 static char colorMap[GEM + 1][20] = {"Gold3", "Gold2", "Gold1", "Gray", "Ivory"};
 static char outColorMap[GEM + 1][20] = {"Goldenrod3", "Goldenrod2", "Goldenrod1", "Gray21", "Blue"};
 static double speedMap[GEM + 1] = {0.1, 0.05, 0.02, 0.05, 0.1};
+static button *pause;
 
 int checkIntersect(gold aGold)
 {
@@ -120,6 +121,7 @@ void generateMap()
 {
     countdown = 60 * 1000;
     target = 1000 * (level + 1);
+    state = WAITING;
     clearGold();
     int i, j, counter[5];
     counter[SMALL] = RandomInteger(2, 3);
@@ -138,6 +140,7 @@ void refresh()
     displayBoard();
     drawGold();
     displayState();
+    drawButton(pause);
 }
 
 #define defaultTimer 1
@@ -169,6 +172,7 @@ void runtime()
     if (countdown <= 0)
     {
         cancelTimer(defaultTimer);
+        got = NULL;
         if (score >= target)
         {
             level++;
@@ -273,8 +277,25 @@ void handler(int key, int event)
     }
 }
 
+void pauseGame()
+{
+
+}
+
+void initButton()
+{
+    double buttonWidth = 0.6, buttonHeight = 0.3, delta = 0.05;
+    pause = createButton(delta, height - buttonHeight - delta, buttonWidth, buttonHeight, "ÔÝÍ£", &pauseGame);
+    insButton(pause);
+    drawButton(pause);
+    enableButton(pause);
+}
+
 void initGame()
 {
+    if (pause == NULL)
+        initButton();
+
     Randomize();
     generateMap();
     refresh();
