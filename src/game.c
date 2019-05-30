@@ -145,7 +145,18 @@ void refresh()
 #define failureTimer 3
 #define pi 3.14159265
 #define originSpeed 0.05
-#define cLength 0.3
+#define cLength 0.15
+
+void drawHook(double x, double y, double theta)
+{
+    SetPenColor("Gray21");
+    MovePen(x, y);
+    drawVector(cLength, theta - pi / 4);
+    drawVector(cLength, theta - pi / 10);
+    MovePen(x, y);
+    drawVector(cLength, theta + pi / 4);
+    drawVector(cLength, theta + pi / 10);
+}
 
 void runtime()
 {
@@ -231,8 +242,7 @@ void runtime()
     SetPenColor("Black");
     MovePen(centerX, centerY);
     DrawLine(cx, cy);
-    drawVector(centerX + cx, centerY + cy, cLength, theta - pi / 5);
-    drawVector(centerX + cx, centerY + cy, cLength, theta + pi / 5);
+    drawHook(centerX + cx, centerY + cy, theta);
 }
 
 void moniter(int timerID)

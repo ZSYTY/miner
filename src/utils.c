@@ -46,9 +46,8 @@ void drawCircle(double x, double y, double r)
     DrawArc(r, 0, 360);
 }
 
-void drawVector(double x, double y, double r, double theta)
+void drawVector(double r, double theta)
 {
-    MovePen(x, y);
     DrawLine(r * cos(theta), r * sin(theta));
 }
 
