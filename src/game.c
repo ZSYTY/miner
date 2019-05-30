@@ -13,6 +13,7 @@ static int state;
 #define DOWN 1
 #define UP 2
 static linkHead linkGold;
+static gold *got;
 extern double width, height;
 #define boardRatio (4.0 / 5)
 
@@ -105,6 +106,24 @@ void drawGold()
     }
 }
 
+gold *checkMeet(double x, double y)
+{
+    linkHead p = linkGold;
+    gold *cur = NULL;
+    while (p != NULL)
+    {
+        cur = p->data;
+        if (cur->type == SMALL && x >= cur->x && x <= cur->x + width / 64 && y >= cur->y && y <= cur->y + height / 64)
+            return cur;
+        else if (cur->type == MEDIUM && x >= cur->x && x <= cur->x + width / 25 && y >= cur->y && y <= cur->y + height / 25)
+            return cur;
+        else if (cur->type == LARGE && x >= cur->x && x <= cur->x + width / 10 && y >= cur->y && y <= cur->y + height / 10)
+            return cur;
+        p = p->next;
+    }
+    return NULL;
+}
+
 void displayBoard()
 {
     double width = GetWindowWidth();
@@ -125,9 +144,13 @@ void displayBoard()
 
 void displayState()
 {
+    SetPenColor("Black");
+    SetEraseMode(TRUE);
     static char stateText[MAX_TEXT_LENGTH + 1];
     sprintf(stateText, "当前分数：%d", score);
     MovePen(0, height * 5 / 6);
+    DrawTextString(stateText);
+    SetEraseMode(FALSE);
     DrawTextString(stateText);
 }
 
@@ -187,6 +210,11 @@ void moniter(int timerID)
             DrawLine(dx, dy);
             drawVector(centerX, centerY, cLength, theta - pi / 8);
             drawVector(centerX, centerY, cLength, theta + pi / 8);
+            got = checkMeet(centerX, centerY);
+            if (got != NULL)
+            {
+                state = UP;
+            }
             if (centerX <= 0 || centerX >= width || centerY <= 0)
             {
                 state = UP;
@@ -203,11 +231,56 @@ void moniter(int timerID)
             DrawLine(dx, dy);
             centerX -= dx;
             centerY -= dy;
+            if (got != NULL)
+                drawGold();
             SetEraseMode(FALSE);
             drawVector(centerX, centerY, cLength, theta - pi / 8);
             drawVector(centerX, centerY, cLength, theta + pi / 8);            
+            if (got != NULL)
+            {
+                linkHead p = linkGold;
+                static gold *cur = NULL;
+                while (p != NULL)
+                {
+                    cur = p->data;
+                    if (cur->x == got->x && cur->y == got->y)
+                    {
+                        cur->x -= dx;
+                        cur->y -= dy;
+                        break;
+                    }
+                    p = p->next;
+                }
+                drawGold();
+            }
             if (centerY >= height * boardRatio)
             {
+                if (got != NULL)
+                {
+                    if (got->type == SMALL)
+                    score += 50;
+                    else if (got->type == MEDIUM)
+                        score += 100;
+                    else if (got->type == LARGE)
+                        score += 500;
+                    linkHead p = linkGold;
+                    static gold *cur = NULL;
+                    while (p != NULL)
+                    {
+                        cur = p->data;
+                        if (cur->x == got->x && cur->y == got->y)
+                        {
+                            delNode(linkGold, p);
+                            break;
+                        }
+                        p = p->next;
+                    }
+                    got = NULL;
+                    clearScreen();
+                    displayBoard();
+                    drawGold();
+                    displayState();
+                }
                 state = WAITING;
             }
             break;
@@ -225,7 +298,7 @@ void handler(int key, int event)
 
 void initGame()
 {
-    // InitConsole();
+//    InitConsole();
     Randomize();
     clearScreen();
     clearGold();
