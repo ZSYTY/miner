@@ -8,7 +8,9 @@ typedef enum
 {
     SMALL,
     MEDIUM,
-    LARGE
+    LARGE,
+    STONE,
+    GEM
 } goldType;
 
 typedef struct

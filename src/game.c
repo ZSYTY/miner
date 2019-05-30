@@ -22,9 +22,9 @@ int checkIntersect(gold aGold)
     linkHead p = linkGold;
     double l1, r1, l2, r2, u1, d1, u2, d2;
     l1 = aGold.x, d1 = aGold.y;
-    if (aGold.type == SMALL)
-        r1 = aGold.x + width / 64, u1 = aGold.y + height / 64;
-    else if (aGold.type == MEDIUM)
+    if (aGold.type == SMALL || aGold.type == GEM)
+        r1 = aGold.x + width / 60, u1 = aGold.y + height / 60;
+    else if (aGold.type == MEDIUM || aGold.type == STONE)
         r1 = aGold.x + width / 25, u1 = aGold.y + height / 25;
     else
         r1 = aGold.x + width / 10, u1 = aGold.y + height / 10;
@@ -32,9 +32,9 @@ int checkIntersect(gold aGold)
     {
         gold *cur = p->data;
         l2 = cur->x, d2 = cur->y;
-        if (cur->type == SMALL)
-            r2 = cur->x + width / 64, u2 = cur->y + height / 64;
-        else if (cur->type == MEDIUM)
+        if (cur->type == SMALL || aGold.type == GEM)
+            r2 = cur->x + width / 60, u2 = cur->y + height / 60;
+        else if (cur->type == MEDIUM || aGold.type == STONE)
             r2 = cur->x + width / 25, u2 = cur->y + height / 25;
         else
             r2 = cur->x + width / 10, u2 = cur->y + height / 10;
@@ -56,15 +56,15 @@ void generateGold(int type)
     linkHead p = linkGold;
     gold *aGold = malloc(sizeof(gold));
     aGold->type = type;
-    if (aGold->type == SMALL)
+    if (aGold->type == SMALL || aGold->type == GEM)
     {
         do
         {
-            aGold->x = RandomReal(0, width * 63 / 64);
-            aGold->y = RandomReal(0, height * 5 / 7 * 63 / 64);
+            aGold->x = RandomReal(0, width * 59 / 60);
+            aGold->y = RandomReal(0, height * 5 / 7 * 59 / 60);
         } while (!checkIntersect(*aGold));
     }
-    else if (aGold->type == MEDIUM)
+    else if (aGold->type == MEDIUM || aGold->type == STONE)
     {
         do
         {
@@ -92,15 +92,25 @@ void drawGold()
         gold *cur = p->data;
         if (cur->type == SMALL)
         {
-            drawFilledRect(cur->x, cur->y, width / 64, height / 64);
+            drawFilledRect(cur->x, cur->y, width / 60, height / 60);
         }
         else if (cur->type == MEDIUM)
         {
             drawFilledRect(cur->x, cur->y, width / 25, height / 25);
         }
-        else
+        else if (cur->type == LARGE)
         {
             drawFilledRect(cur->x, cur->y, width / 10, height / 10);
+        }
+        else if (cur->type == STONE)
+        {
+            SetPenColor("Gray");
+            drawFilledRect(cur->x, cur->y, width / 25, height / 25);
+        }
+        else if (cur->type == GEM)
+        {
+            SetPenColor("Blue");
+            drawFilledRect(cur->x, cur->y, width / 60, height / 60);
         }
         p = p->next;
     }
@@ -113,9 +123,9 @@ gold *checkMeet(double x, double y)
     while (p != NULL)
     {
         cur = p->data;
-        if (cur->type == SMALL && x >= cur->x && x <= cur->x + width / 64 && y >= cur->y && y <= cur->y + height / 64)
+        if ((cur->type == SMALL || cur->type == GEM) && x >= cur->x && x <= cur->x + width / 60 && y >= cur->y && y <= cur->y + height / 60)
             return cur;
-        else if (cur->type == MEDIUM && x >= cur->x && x <= cur->x + width / 25 && y >= cur->y && y <= cur->y + height / 25)
+        else if ((cur->type == MEDIUM || cur->type == STONE) && x >= cur->x && x <= cur->x + width / 25 && y >= cur->y && y <= cur->y + height / 25)
             return cur;
         else if (cur->type == LARGE && x >= cur->x && x <= cur->x + width / 10 && y >= cur->y && y <= cur->y + height / 10)
             return cur;
@@ -156,11 +166,13 @@ void displayState()
 
 void displayMap()
 {
-    int i, j, counter[3];
-    counter[SMALL] = RandomInteger(3, 5);
-    counter[MEDIUM] = RandomInteger(2, 4);
+    int i, j, counter[5];
+    counter[SMALL] = RandomInteger(2, 3);
+    counter[MEDIUM] = RandomInteger(1, 2);
     counter[LARGE] = RandomInteger(1, 2);
-    for (i = 2; i >= 0; i--)
+    counter[STONE] = RandomInteger(1, 2);
+    counter[GEM] = RandomInteger(1, 2);
+    for (i = 4; i >= 0; i--)
         for (j = 0; j < counter[i]; j++)
             generateGold(i);
     drawGold();
@@ -263,6 +275,10 @@ void moniter(int timerID)
                         score += 100;
                     else if (got->type == LARGE)
                         score += 500;
+                    else if (got->type == STONE)
+                        score += 20;
+                    else if (got->type == GEM)
+                        score += 600;
                     linkHead p = linkGold;
                     static gold *cur = NULL;
                     while (p != NULL)
