@@ -3,6 +3,27 @@
 #include <math.h>
 #include <string.h>
 
+void addColor(string name, int r, int g, int b)
+{
+    DefineColor(name, 1.0 * r / 255, 1.0 * g / 255, 1.0 * b / 255);
+}
+
+void initColor()
+{
+    addColor("Azure", 240, 255, 255);
+    addColor("Gold1", 255, 215, 0);
+    addColor("Gold2", 238, 201, 0);
+    addColor("Gold3", 205, 173, 0);
+    addColor("Goldenrod1", 255, 193, 37);
+    addColor("Goldenrod2", 238, 180, 34);
+    addColor("Goldenrod3", 205, 155, 29);
+    addColor("Gray21", 54, 54, 54);
+    addColor("CornflowerBlue", 100, 149, 237);
+    addColor("SpringGreen3", 0, 205, 102);
+    addColor("LightCyan", 224, 255, 255);
+    addColor("Ivory", 255, 255, 240);
+}
+
 void drawRectangle(double x, double y, double width, double height)
 {
     MovePen(x, y);
@@ -25,7 +46,8 @@ void drawCircle(double x, double y, double r)
     DrawArc(r, 0, 360);
 }
 
-void drawVector(double x, double y, double r, double theta) {
+void drawVector(double x, double y, double r, double theta)
+{
     MovePen(x, y);
     DrawLine(r * cos(theta), r * sin(theta));
 }
@@ -33,7 +55,7 @@ void drawVector(double x, double y, double r, double theta) {
 void clearScreen()
 {
     string preColor = GetPenColor();
-    SetPenColor("White");
+    SetPenColor("Azure");
 
     StartFilledRegion(1);
     drawRectangle(0, 0, GetWindowWidth(), GetWindowHeight());

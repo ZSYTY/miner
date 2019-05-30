@@ -6,6 +6,7 @@ void Main()
 {
     SetWindowTitle("»Æ½ð¿ó¹¤");
     InitGraphics();
+    initColor();
     initStartPage();
     return;
 }

@@ -31,7 +31,7 @@ void disableAll()
 void D(double x, double y)
 {
     MovePen(x, y);
-    SetPenColor("Cyan");
+    SetPenColor("CornflowerBlue");
     StartFilledRegion(1);
     DrawArc(-0.5, 0, 180);
     EndFilledRegion();
@@ -40,7 +40,7 @@ void D(double x, double y)
     StartFilledRegion(1);
     DrawArc(-0.4, 0, 180);
     EndFilledRegion();
-    SetPenColor("Cyan");
+    SetPenColor("CornflowerBlue");
     drawFilledRect(x, y, 1, 0.05);
 }
 
@@ -109,7 +109,7 @@ void DrawBody(double x, double y)
     StartFilledRegion(1);
     DrawArc(-1.1, 0, 180);
     EndFilledRegion();
-    SetPenColor("Green");
+    SetPenColor("SpringGreen3");
     drawFilledRect(x - 2.2, y - 1.1, 2.2, -0.1);
     drawFilledRect(x - 1.1, y - 1.25, 0.6, -0.4);
 }
@@ -141,7 +141,7 @@ void MineCar(double x, double y, char *b)
     StartFilledRegion(1);
     DrawArc(0.15, 0, 360);
     EndFilledRegion();
-    SetPenColor("Yellow");
+    SetPenColor("Gold1");
     drawFilledRect(x - 0.57, y + 0.15, 1.8, 0.4);
     drawFilledRect(x + 1.2, y + 0.15, 0.1, 0.6);
     drawFilledRect(x, y + 0.55, 0.6, 0.3);
@@ -156,7 +156,7 @@ void MineCar(double x, double y, char *b)
 
 void drawStartPage(double width, double height)
 {
-    SetPenColor("Black");
+    SetPenColor("Azure");
     drawFilledRect(width, height, -width, -height);
     DrawFace(width / 2 - 1.5, height / 2);
     DrawHead(width / 2 - 1.5, height / 2);
@@ -177,14 +177,15 @@ void initStartPage()
     double buttonWidth = width / 4;
     double buttonHeight = 1;
 
-    start = createButton(width / 2, height / 2 + 0.5, buttonWidth, buttonHeight, "开始游戏", &startGame);
-
-    resume = createButton(width / 2 + 0.8, height / 2 - 0.5, buttonWidth, buttonHeight, "继续游戏", &resumeGame);
-
-    quit = createButton(width / 2 + 1.6, height / 2 - 1.5, buttonWidth, buttonHeight, "退出游戏", &quitGame);
-
-    registerMouseEvent(buttonCallBack);
-    insAll();
+    if (start == NULL)
+    {
+        start = createButton(width / 2, height / 2 + 0.5, buttonWidth, buttonHeight, "开始游戏", &startGame);
+        resume = createButton(width / 2 + 0.8, height / 2 - 0.5, buttonWidth, buttonHeight, "继续游戏", &resumeGame);
+        quit = createButton(width / 2 + 1.6, height / 2 - 1.5, buttonWidth, buttonHeight, "退出游戏", &quitGame);
+        registerMouseEvent(buttonCallBack);
+        insAll();
+    }
+    
     enableAll();
 }
 

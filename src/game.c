@@ -1,4 +1,5 @@
 #include "game.h"
+#include "start.h"
 #include "utils.h"
 #include "random.h"
 #include "graphics.h"
@@ -7,18 +8,20 @@
 #include <math.h>
 #include <windows.h>
 
-static int score;
+static int score, target, level, countdown;
 static int state;
 #define WAITING 0
 #define DOWN 1
 #define UP 2
 static linkHead linkGold;
-static linkNode *got;
 extern double width, height;
 #define boardRatio (4.0 / 5)
+#define refreshInterval 20
 static int scoreMap[GEM + 1] = {50, 100, 500, 20, 600};
 static int ratioMap[GEM + 1] = {60, 25, 10, 25, 60};
-static char colorMap[GEM + 1][10] = {"Yellow", "Yellow", "Yellow", "Gray", "Blue"};
+static char colorMap[GEM + 1][20] = {"Gold3", "Gold2", "Gold1", "Gray", "Ivory"};
+static char outColorMap[GEM + 1][20] = {"Goldenrod3", "Goldenrod2", "Goldenrod1", "Gray21", "Blue"};
+static double speedMap[GEM + 1] = {0.1, 0.05, 0.02, 0.05, 0.1};
 
 int checkIntersect(gold aGold)
 {
@@ -42,8 +45,9 @@ int checkIntersect(gold aGold)
 
 void clearGold()
 {
-    linkGold = NULL;
-    score = 0;
+    while (linkGold != NULL)
+        linkGold = delNode(linkGold, linkGold);
+    // score = 0;
 }
 
 void generateGold(int type)
@@ -66,8 +70,11 @@ void drawGold()
     while (p != NULL)
     {
         gold *cur = p->data;
-        SetPenColor(colorMap[cur->type]);
+        SetPenColor(outColorMap[cur->type]);
         drawFilledRect(cur->x, cur->y, width / ratioMap[cur->type], height / ratioMap[cur->type]);
+        double delta = 0.04;
+        SetPenColor(colorMap[cur->type]);
+        drawFilledRect(cur->x + delta, cur->y + delta, width / ratioMap[cur->type] - delta * 2, height / ratioMap[cur->type] - delta * 2);
         p = p->next;
     }
 }
@@ -91,31 +98,29 @@ void displayBoard()
     double width = GetWindowWidth();
     double height = GetWindowHeight();
 
-    SetPenColor("Black");
+    SetPenColor("Gray21");
     MovePen(0, height * boardRatio);
     DrawLine(width, 0);
 
-    double minerWidth = 0.8;
-    double minerHeight = 0.8;
-
-    drawRectangle(width / 2 - minerWidth / 2, height * boardRatio, minerWidth, minerHeight);
-
+    double r = 0.8;
+    MovePen(width / 2 + r, height * boardRatio);
+    DrawArc(r, 0, 180);
 }
 
 void displayState()
 {
-    SetPenColor("Black");
-    SetEraseMode(TRUE);
+    SetPenColor("Gray21");
     static char stateText[MAX_TEXT_LENGTH + 1];
-    sprintf(stateText, "当前分数：%d", score);
+    sprintf(stateText, " 当前分数：%d  目标分数：%d  剩余时间：%d", score, target, countdown / 1000);
     MovePen(0, height * 5 / 6);
-    DrawTextString(stateText);
-    SetEraseMode(FALSE);
     DrawTextString(stateText);
 }
 
-void displayMap()
+void generateMap()
 {
+    countdown = 60 * 1000;
+    target = 1000 * (level + 1);
+    clearGold();
     int i, j, counter[5];
     counter[SMALL] = RandomInteger(2, 3);
     counter[MEDIUM] = RandomInteger(1, 2);
@@ -125,7 +130,6 @@ void displayMap()
     for (i = 4; i >= 0; i--)
         for (j = 0; j < counter[i]; j++)
             generateGold(i);
-    drawGold();
 }
 
 void refresh()
@@ -137,67 +141,117 @@ void refresh()
 }
 
 #define defaultTimer 1
+#define successTimer 2
+#define failureTimer 3
 #define pi 3.14159265
+#define originSpeed 0.05
 #define cLength 0.3
 
-void moniter(int timerID)
+void runtime()
 {
     static double theta = pi;
     static double dTheta = 0;
-    static double dR = 0.05;
+    static double dR = originSpeed;
     static double centerX;
     static double centerY;
-    if (timerID == defaultTimer)
+    static linkNode *got;
+    if (countdown <= 0)
     {
-        double dx, dy;
-        switch (state)
+        cancelTimer(defaultTimer);
+        if (score >= target)
         {
-        case WAITING:
-            centerX = width * .5;
-            centerY = height * boardRatio;
-            dTheta -= 0.001 * cos(theta);
-            theta += dTheta;
-            break;
+            level++;
+            // TODO: draw sth
+            startTimer(successTimer, 3000);
+        }
+        else
+        {
+            // TODO: draw sth
+            startTimer(failureTimer, 3000);
+        }
+    }
+    countdown -= refreshInterval;
 
-        case DOWN:
-            dx = dR * cos(theta), dy = dR * sin(theta);
-            centerX += dx;
-            centerY += dy;
-            got = checkMeet(centerX, centerY);
-            if (got != NULL)
-                state = UP;
-            if (centerX <= 0 || centerX >= width || centerY <= 0)
-                state = UP;
-            break;
+    double dx, dy;
+    double cx = cLength * cos(theta), cy = cLength * sin(theta);
+    switch (state)
+    {
+    case WAITING:
+        centerX = width * .5;
+        centerY = height * boardRatio;
+        dTheta -= 0.001 * cos(theta);
+        theta += dTheta;
+        break;
 
-        case UP:
-            dx = dR * cos(theta), dy = dR * sin(theta);
-            centerX -= dx;
-            centerY -= dy;
+    case DOWN:
+        dx = dR * cos(theta), dy = dR * sin(theta);
+        centerX += dx;
+        centerY += dy;
+        got = checkMeet(centerX + cx, centerY + cy);
+        if (got != NULL)
+        {
+            state = UP;
+            gold *cur = got->data;
+            dR = speedMap[cur->type];
+        }
+        if (centerX <= 0 || centerX >= width || centerY <= 0)
+        {
+            state = UP;
+            dR *= 2;
+        }
+        break;
+
+    case UP:
+        dx = dR * cos(theta), dy = dR * sin(theta);
+        centerX -= dx;
+        centerY -= dy;
+        if (got != NULL)
+        {
+            gold *cur = got->data;
+            cur->x -= dx;
+            cur->y -= dy;
+        }
+        if (centerY >= height * boardRatio)
+        {
             if (got != NULL)
             {
                 gold *cur = got->data;
-                cur->x -= dx;
-                cur->y -= dy;
+                score += scoreMap[cur->type];
+                linkGold = delNode(linkGold, got);
+                got = NULL;
             }
-            if (centerY >= height * boardRatio)
-            {
-                if (got != NULL)
-                {
-                    gold *cur = got->data;
-                    score += scoreMap[cur->type];
-                    linkGold = delNode(linkGold, got);
-                    got = NULL;
-                }
-                state = WAITING;
-            }
-            break;
+            state = WAITING;
+            dR = originSpeed;
         }
-        refresh();
-        MovePen(width * .5, height * boardRatio);
-        DrawLine(centerX - width * .5, centerY - height * boardRatio);
-        drawVector(centerX, centerY, cLength, theta - pi / 8);
-        drawVector(centerX, centerY, cLength, theta + pi / 8);
+        break;
+    }
+    refresh();
+    MovePen(width * .5, height * boardRatio);
+    DrawLine(centerX - width * .5, centerY - height * boardRatio);
+    SetPenColor("Black");
+    MovePen(centerX, centerY);
+    DrawLine(cx, cy);
+    drawVector(centerX + cx, centerY + cy, cLength, theta - pi / 5);
+    drawVector(centerX + cx, centerY + cy, cLength, theta + pi / 5);
+}
+
+void moniter(int timerID)
+{
+    switch (timerID)
+    {
+    case defaultTimer:
+        runtime();
+        break;
+
+    case successTimer:
+        cancelTimer(successTimer);
+        initGame();
+        break;
+
+    case failureTimer:
+        cancelTimer(failureTimer);
+        initStartPage();
+        break;
     }
 }
 
@@ -212,13 +266,10 @@ void handler(int key, int event)
 void initGame()
 {
     Randomize();
-    clearScreen();
-    clearGold();
-    displayBoard();
-    displayState();
-    displayMap();
+    generateMap();
+    refresh();
 
     registerKeyboardEvent(&handler);
     registerTimerEvent(&moniter);
-    startTimer(defaultTimer, 20);
+    startTimer(defaultTimer, refreshInterval);
 }
