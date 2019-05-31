@@ -327,18 +327,16 @@ void gameMenu()
     if (state == MENUING) //当前已打开菜单，关闭
     {
         state = preState;
-        strcpy(menu->text, "菜单");
         startTimer(defaultTimer, refreshInterval);
     }
     else //当前未打开菜单，即打开菜单
     {
         preState = state;
         state = MENUING;
-        strcpy(menu->text, "关闭");
         MineCar(width / 2, height / 2 + 0.5, "保存游戏");
         MineCar(width / 2 + 0.8, height / 2 - 0.5, "继续游戏");
         MineCar(width / 2 + 1.6, height / 2 - 1.5, "退出游戏");
-        runtime();
+        //runtime();
         cancelTimer(defaultTimer);
     }
 }
