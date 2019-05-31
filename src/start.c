@@ -7,8 +7,6 @@ double height;
 static button *start = NULL, *resume = NULL, *quit = NULL;
 static linkHead buttonList;
 
-extern score, target, level, countdown;
-
 void insAll() //插入按钮
 {
     insButton(start);
@@ -32,58 +30,81 @@ void disableAll() //关闭按钮
 //画开始界面的矿工、矿车等
 void D(double x, double y)
 {
-    MovePen(x, y);
-    SetPenColor("CornflowerBlue");
-    StartFilledRegion(1);
-    DrawArc(-0.5, 0, 180);
-    EndFilledRegion();
+
     MovePen(x + 0.1, y);
     SetPenColor("Red");
     StartFilledRegion(1);
     DrawArc(-0.4, 0, 180);
     EndFilledRegion();
-    SetPenColor("CornflowerBlue");
-    drawFilledRect(x, y, 1, 0.05);
 }
 
 void L(double x, double y)
 {
     SetPenColor("Gray");
-    drawFilledRect(x - 0.1, y + 0.25, 0.5, 0.1);
-    drawFilledRect(x + 0.3, y + 0.25, 0.1, -0.9);
+    drawFilledRect(x - 0.1, y + 0.25, 0.5, 0.2);
+    drawFilledRect(x + 0.3, y + 0.25, 0.2, 0.9);
 }
 
 void O(double x, double y)
 {
+	SetPenColor("Silver");
+	MovePen(x+0.3,y - 0.1);
+	StartFilledRegion(1);
+	DrawArc(0.5,0,360);
+	EndFilledRegion();
     SetPenColor("White");
-    MovePen(x, y);
+    MovePen(x + 0.2, y - 0.1);
     StartFilledRegion(1);
-    DrawEllipticalArc(0.225, 0.325, 0, 360);
+    DrawArc(0.4, 0, 360);
     EndFilledRegion();
-    MovePen(x - 0.075, y);
-    SetPenColor("Magenta");
+    MovePen(x, y-0.06);
+    SetPenColor("Black");
     StartFilledRegion(1);
-    DrawEllipticalArc(0.15, 0.2, 0, 360);
+    DrawArc(0.2, 0, 360);
     EndFilledRegion();
 }
 
 void G(double x, double y)
 {
     SetPenColor("Dark Gray");
-    drawFilledRect(x - 1, y + 0.25, 0.5, 0.1);
-    drawFilledRect(x - 1.05, y + 0.35, 0.1, -0.9);
-    drawFilledRect(x - 1.05, y - 0.55, 0.45, -0.1);
-    drawFilledRect(x - 0.7, y - 0.55, 0.1, 0.15);
-    drawFilledRect(x - 0.8, y - 0.3, 0.3, 0.1);
+    drawFilledRect(x - 1, y + 0.25, 0.4, 0.2);
+    drawFilledRect(x - 1, y + 0.35, 0.2, -0.9);
+    drawFilledRect(x - 1, y - 0.55, 0.45, -0.2);
+    drawFilledRect(x - 0.6, y - 0.75, 0.15, 0.45);
 }
 void DrawFace(double x, double y)
 {
-    O(x - 0.5, y + 0.2);
-    G(x - 0.5, y + 0.5);
-    L(x - 0.5, y + 0.5);
-    D(x - 1.25, y - 0.3);
+    O(x - 0.8, y + 0.5);
+    G(x - 1.6, y - 0.8);
+    L(x + 0.1 , y - 0.8);
+    SetPenColor("Black");
+    drawFilledRect(x - 1.4, y - 0.7, 0.8, 0.05);
 }
-void DrawHead(double x, double y)
+
+void DrawSmile(double x, double y)
+{
+    O(x - 0.8, y + 0.5);
+    G(x - 1.6, y - 0.8);
+    L(x + 0.1 , y - 0.8);
+    D(x - 1.5, y - 0.4);
+}
+
+void DrawAngry(double x, double y)
+{
+    O(x - 0.8, y + 0.5);
+    G(x - 1.6, y - 0.8);
+    SetPenColor("Gray");
+    drawFilledRect(x, y - 0.55, 0.3, 0.2);
+    drawFilledRect(x + 0.2, y - 0.35, 0.2, -1.2);
+    MovePen(x - 0.6, y-0.8);
+    SetPenColor("Red");
+    StartFilledRegion(1);
+    DrawArc(0.4, 0, 180);
+    DrawEllipticalArc(-0.4,0.2,0,180);
+    EndFilledRegion();
+}
+
+void DrawHat(double x, double y)
 {
     SetPenColor("Red");
     MovePen(x, y + 1.1);
@@ -92,12 +113,12 @@ void DrawHead(double x, double y)
     EndFilledRegion();
     SetPenColor("Brown");
     drawFilledRect(x, y + 1.1, -2.2, -0.1);
-    MovePen(x - 0.55, y + 1.475);
+    MovePen(x - 0.8, y + 1.6);
     SetPenColor("Light Gray");
     StartFilledRegion(1);
     DrawArc(0.2, 0, 360);
     EndFilledRegion();
-    MovePen(x - 0.65, y + 1.475);
+    MovePen(x - 0.9, y + 1.6);
     SetPenColor("Yellow");
     StartFilledRegion(1);
     DrawArc(0.1, 0, 360);
@@ -106,6 +127,8 @@ void DrawHead(double x, double y)
 
 void DrawBody(double x, double y)
 {
+	SetPenColor("Yellow");
+	drawFilledRect(x - 2.2, y - 1.1,2.2,2.2);
     SetPenColor("Blue");
     MovePen(x - 2.2, y - 1.1);
     StartFilledRegion(1);
@@ -119,11 +142,11 @@ void DrawBody(double x, double y)
 void DrawShovel(double x, double y)
 {
     SetPenColor("Brown");
-    drawFilledRect(x, y, 0.4, 0.1);
-    drawFilledRect(x + 0.15, y, 0.1, 1.2);
+    drawFilledRect(x - 0.4, y - 0.1, 0.75, 0.2);
+    drawFilledRect(x, y - 0.1, 0.15, 1.2);
     SetPenColor("Light Gray");
-    drawFilledRect(x - 0.05, y + 1.1, 0.5, 0.5);
-    MovePen(x - 0.05, y + 1.6);
+    drawFilledRect(x - 0.2, y + 1.1, 0.5, 0.5);
+    MovePen(x - 0.2, y + 1.6);
     StartFilledRegion(1);
     DrawEllipticalArc(-0.25, 0.3, 0, 360);
     EndFilledRegion();
@@ -160,10 +183,10 @@ void drawStartPage(double width, double height) //开始界面
 {
     SetPenColor("Azure");
     drawFilledRect(width, height, -width, -height);
-    DrawFace(width / 2 - 1.5, height / 2);
-    DrawHead(width / 2 - 1.5, height / 2);
-    DrawShovel(width / 2 - 3.7, height / 2 - 1);
+    DrawHat(width / 2 - 1.5, height / 2);
     DrawBody(width / 2 - 1.5, height / 2);
+    DrawShovel(width / 2 - 3.7, height / 2 - 1);
+    DrawFace(width / 2 - 1.5, height / 2);
     MineCar(width / 2, height / 2 + 0.5, "开始游戏");
     MineCar(width / 2 + 0.8, height / 2 - 0.5, "继续游戏");
     MineCar(width / 2 + 1.6, height / 2 - 1.5, "退出游戏");
@@ -199,21 +222,8 @@ void startGame() //开始游戏
 
 void resumeGame() //继续游戏
 {
-    FILE *fp;
-    fp = fopen("save.txt", "r");
-    if (fp == NULL)
-    {
-        disableAll();
-        initGame();
-    }
-    // else
-    // {
-    //     disableAll();
-    //     int saveScore, saveTarget, saveLevel, saveCountdown;
-    //     fscanf(fp, "%d%d", &saveScore, &saveTarget, &saveLevel, &saveCountdown);
-    //     score = saveScore, target = saveTarget, level = saveLevel, countdown = saveCountdown;
-    //     refresh();
-    // }
+    disableAll();
+    initGame();
 }
 
 void quitGame() //退出游戏

@@ -13,8 +13,7 @@ enum
     WAITING,
     DOWN,
     UP,
-    PAUSED,
-    MENUING
+    PAUSED
 };                                          //状态参数
 static int score, target, level, countdown; //分数，目标分数，等级，时间倒数
 static int state;
@@ -33,7 +32,7 @@ static int ratioMap[GEM + 1] = {60, 25, 10, 25, 60};
 static char colorMap[GEM + 1][20] = {"Gold3", "Gold2", "Gold1", "Gray", "Ivory"};                    //画矿用的颜色
 static char outColorMap[GEM + 1][20] = {"Goldenrod3", "Goldenrod2", "Goldenrod1", "Gray21", "Blue"}; //画界面的颜色
 static double speedMap[GEM + 1] = {0.1, 0.05, 0.01, 0.01, 0.1};                                      //钩子碰到矿后的返回速度
-static button *pause, *menu;
+static button *pause;
 
 int checkIntersect(gold aGold) //随机生成矿的时候，检查是否有两个矿相交
 {
@@ -82,12 +81,23 @@ void drawGold() //构建完矿的链表后，画出矿
     while (p != NULL) //遍历矿的链表的每一个节点，并画图
     {
         gold *cur = p->data;
-        SetPenColor(outColorMap[cur->type]);
-        drawFilledRect(cur->x, cur->y, width / ratioMap[cur->type], height / ratioMap[cur->type]);
-        double delta = 0.04;
-        SetPenColor(colorMap[cur->type]);
-        drawFilledRect(cur->x + delta, cur->y + delta, width / ratioMap[cur->type] - delta * 2, height / ratioMap[cur->type] - delta * 2);
-        p = p->next;
+        if (cur->type != GEM)
+        {
+        	SetPenColor(outColorMap[cur->type]);
+        	drawFilledIrregular(cur->x, cur->y, width / ratioMap[cur->type], height / ratioMap[cur->type]);
+        	double delta = 0.04;
+        	SetPenColor(colorMap[cur->type]);
+        	drawFilledIrregular(cur->x + delta, cur->y + delta, width / ratioMap[cur->type] - delta * 2, height / ratioMap[cur->type] - delta * 2);
+        	p = p->next;
+    	}
+    	else{
+    		SetPenColor(outColorMap[cur->type]);
+        	drawDiamond(cur->x, cur->y, width / ratioMap[cur->type], height / ratioMap[cur->type]);
+        	double delta = 0.04;
+        	SetPenColor(colorMap[cur->type]);
+        	drawDiamond(cur->x + delta, cur->y + delta, width / ratioMap[cur->type] - delta * 2, height / ratioMap[cur->type] - delta * 2);
+        	p = p->next;
+		}
     }
 }
 
@@ -152,7 +162,6 @@ void refresh() //刷新界面
     drawGold();
     displayState();
     drawButton(pause);
-    drawButton(menu);
 }
 
 void drawHook(double x, double y, double theta) //画钩子
@@ -168,17 +177,38 @@ void drawHook(double x, double y, double theta) //画钩子
 
 void drawSuccess() //画通关界面
 {
-    SetPenColor("Green");
-    SetPenSize(10);
+	clearScreen(); 
     static char stateText[MAX_TEXT_LENGTH + 1];
+    width = GetWindowWidth();
+    height = GetWindowHeight();
+	DrawHat(width / 2 , height / 2);
+    DrawBody(width / 2 , height / 2);
+    DrawShovel(width / 2 - 2.2, height / 2 - 1);
+    DrawFace(width / 2 , height / 2);
+    SetPenColor("Green");
+    SetPenSize(8);
     sprintf(stateText, " 恭喜你顺利过关 ");
-    MovePen(width / 2, height / 2);
+    MovePen(width/2 + 0.5, height/2 + 0.5);
     DrawTextString(stateText);
     SetPenSize(1);
 }
 
 void drawFailure() //画失败界面
 {
+	clearScreen(); 
+    static char stateText[MAX_TEXT_LENGTH + 1];
+    width = GetWindowWidth();
+    height = GetWindowHeight();
+    DrawHat(width / 2 , height / 2);
+    DrawBody(width / 2 , height / 2);
+    DrawShovel(width / 2 - 2.2, height / 2 - 1);
+    DrawFace(width / 2 , height / 2);
+    SetPenColor("Red");
+    SetPenSize(8);
+    sprintf(stateText, " 很遗憾，你没有通关 ");
+    MovePen(width/2 + 0.5, height/2 + 0.5);
+    DrawTextString(stateText);
+    SetPenSize(1);
 }
 
 void runtime() //玩黄金矿工时的动画
@@ -321,26 +351,6 @@ void pauseGame() //暂停游戏
     }
 }
 
-void gameMenu()
-{
-    static int preState;
-    if (state == MENUING) //当前已打开菜单，关闭
-    {
-        state = preState;
-        startTimer(defaultTimer, refreshInterval);
-    }
-    else //当前未打开菜单，即打开菜单
-    {
-        preState = state;
-        state = MENUING;
-        MineCar(width / 2, height / 2 + 0.5, "保存游戏");
-        MineCar(width / 2 + 0.8, height / 2 - 0.5, "继续游戏");
-        MineCar(width / 2 + 1.6, height / 2 - 1.5, "退出游戏");
-        //runtime();
-        cancelTimer(defaultTimer);
-    }
-}
-
 void initButton() //初始化按钮
 {
     double buttonWidth = 0.6, buttonHeight = 0.3, delta = 0.05;
@@ -348,10 +358,6 @@ void initButton() //初始化按钮
     insButton(pause);
     drawButton(pause);
     enableButton(pause);
-    menu = createButton(delta * 2 + buttonWidth, height - buttonHeight - delta, buttonWidth, buttonHeight, "菜单", &gameMenu);
-    insButton(menu);
-    drawButton(menu);
-    enableButton(menu);
 }
 
 void initGame() //游戏初始化

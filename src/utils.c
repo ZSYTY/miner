@@ -22,6 +22,33 @@ void initColor() //自定义颜色
     addColor("SpringGreen3", 0, 205, 102);
     addColor("LightCyan", 224, 255, 255);
     addColor("Ivory", 255, 255, 240);
+    addColor("Silver", 192, 192, 192); 
+    addColor("Cobalt",61,89,171);
+}
+
+void drawDiamond(double x, double y, double width, double height)
+{
+	MovePen(x,y+height/2);
+	SetPenColor("Cobalt");
+	StartFilledRegion(1);
+	DrawLine(width/4,width/4);
+	DrawLine(width/2,0);
+	DrawLine(width/4,-width/4);
+	DrawLine(-width/2,-(height));
+	DrawLine(-width/2,(height));
+	EndFilledRegion();
+}
+
+void drawFilledIrregular(double x, double y, double width, double height)//画不规则石头或者金块 
+{
+	drawFilledRect(x, y, width, height);
+    drawFilledRect(x+width, y, width*0.1, width/4);
+    drawFilledRect(x, y+height*0.6, -height/6, -width/5);
+    drawFilledRect(x, y, height, -width*0.1);
+    drawFilledRect(x+ 0.2*width, y + height, width*0.4, height*0.15);
+    drawFilledRect(x+width*0.1, y, height*0.8, -height*0.25);
+    drawFilledRect(x+width, y, -width, -height*0.1);
+
 }
 
 void drawRectangle(double x, double y, double width, double height) //画矩形
@@ -76,7 +103,7 @@ button *createButton(double x, double y, double width, double height, char text[
     return b;
 }
 
-void drawRoundRectangle(double x, double y, double w, double h) //四个角是圆的的矩形，画按钮用
+void drawRoundRectangle(double x, double y, double w, double h) //四个角是圆的的矩形
 {
     double r = 0.05;
     MovePen(x + r, y);
