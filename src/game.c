@@ -21,11 +21,17 @@ static linkHead linkGold;
 extern double width, height;
 #define boardRatio (4.0 / 5)
 #define refreshInterval 20
+#define defaultTimer 1
+#define successTimer 2
+#define failureTimer 3
+#define pi 3.14159265
+#define originSpeed 0.075
+#define cLength 0.15
 static int scoreMap[GEM + 1] = {50, 100, 500, 20, 600};
 static int ratioMap[GEM + 1] = {60, 25, 10, 25, 60};
 static char colorMap[GEM + 1][20] = {"Gold3", "Gold2", "Gold1", "Gray", "Ivory"};
 static char outColorMap[GEM + 1][20] = {"Goldenrod3", "Goldenrod2", "Goldenrod1", "Gray21", "Blue"};
-static double speedMap[GEM + 1] = {0.1, 0.05, 0.02, 0.05, 0.1};
+static double speedMap[GEM + 1] = {0.1, 0.05, 0.01, 0.01, 0.1};
 static button *pause;
 
 int checkIntersect(gold aGold)
@@ -91,7 +97,7 @@ linkNode *checkMeet(double x, double y)
     while (p != NULL)
     {
         cur = p->data;
-        if (x >= cur->x && x <= cur->x + width / ratioMap[cur->type] && y >= cur->y && y <= cur->y + height / ratioMap[cur->type])
+        if (x >= cur->x - .8 * cLength && x <= cur->x + width / ratioMap[cur->type] + .8 * cLength && y >= cur->y && y <= cur->y + height / ratioMap[cur->type] + cLength)
             return p;
         p = p->next;
     }
@@ -124,15 +130,15 @@ void displayState()
 void generateMap()
 {
     countdown = 60 * 1000;
-    target = 1000 * (level + 1);
+    target += 500 * (level + 1);
     state = WAITING;
     clearGold();
     int i, j, counter[5];
-    counter[SMALL] = RandomInteger(2, 3);
+    counter[SMALL] = RandomInteger(2, min(4, 3 + level));
     counter[MEDIUM] = RandomInteger(1, 2);
-    counter[LARGE] = RandomInteger(1, 2);
-    counter[STONE] = RandomInteger(1, 2);
-    counter[GEM] = RandomInteger(1, 2);
+    counter[LARGE] = RandomInteger(max(1, 2 - level), max(1, 2 - level));
+    counter[STONE] = RandomInteger(min(1 + level, 3), min(2 + level, 4));
+    counter[GEM] = RandomInteger(min(2, 1 + level), min(2 + level, 4));
     for (i = 4; i >= 0; i--)
         for (j = 0; j < counter[i]; j++)
             generateGold(i);
@@ -147,13 +153,6 @@ void refresh()
     drawButton(pause);
 }
 
-#define defaultTimer 1
-#define successTimer 2
-#define failureTimer 3
-#define pi 3.14159265
-#define originSpeed 0.05
-#define cLength 0.15
-
 void drawHook(double x, double y, double theta)
 {
     SetPenColor("Gray21");
@@ -163,6 +162,27 @@ void drawHook(double x, double y, double theta)
     MovePen(x, y);
     drawVector(cLength, theta + pi / 4);
     drawVector(cLength, theta + pi / 10);
+}
+
+void drawSuccess()
+{
+    // SetEraseMode(TRUE);
+    // refresh();
+    // clearScreen();
+    // clearScreen();
+    // clearScreen();
+    // clearScreen();
+    // clearScreen();
+    // clearScreen();
+    // SetEraseMode(FALSE);
+    // displayBoard();
+    SetPenColor("Green");
+    SetPenSize(8);
+    static char stateText[MAX_TEXT_LENGTH + 1];
+    sprintf(stateText, " ¹§Ï²ÄãË³Àû¹ý¹Ø ");
+    MovePen(width / 2, height / 2);
+    DrawTextString(stateText);
+    SetPenSize(1);
 }
 
 void runtime()
@@ -180,13 +200,14 @@ void runtime()
         if (score >= target)
         {
             level++;
-            // TODO: draw sth
-            startTimer(successTimer, 3000);
+            drawSuccess();
+            startTimer(successTimer, 5000);
         }
         else
         {
             // TODO: draw sth
-            startTimer(failureTimer, 3000);
+            level = 0;
+            startTimer(failureTimer, 5000);
         }
     }
     countdown -= refreshInterval;
