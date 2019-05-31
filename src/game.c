@@ -14,11 +14,11 @@ enum
     DOWN,
     UP,
     PAUSED
-};//×´Ì¬²ÎÊı
-static int score, target, level, countdown;//·ÖÊı£¬Ä¿±ê·ÖÊı£¬µÈ¼¶£¬Ê±¼äµ¹Êı
+};                                          //×´Ì¬²ÎÊı
+static int score, target, level, countdown; //·ÖÊı£¬Ä¿±ê·ÖÊı£¬µÈ¼¶£¬Ê±¼äµ¹Êı
 static int state;
-static linkHead linkGold;//´æ´¢¿óµÄÁ´±í
-extern double width, height;//ÆÁµÄ¿íºÍ¸ß
+static linkHead linkGold;    //´æ´¢¿óµÄÁ´±í
+extern double width, height; //ÆÁµÄ¿íºÍ¸ß
 #define boardRatio (4.0 / 5)
 #define refreshInterval 20
 #define defaultTimer 1
@@ -29,39 +29,39 @@ extern double width, height;//ÆÁµÄ¿íºÍ¸ß
 #define cLength 0.15
 static int scoreMap[GEM + 1] = {50, 100, 500, 20, 600};
 static int ratioMap[GEM + 1] = {60, 25, 10, 25, 60};
-static char colorMap[GEM + 1][20] = {"Gold3", "Gold2", "Gold1", "Gray", "Ivory"};//»­¿óÓÃµÄÑÕÉ«
-static char outColorMap[GEM + 1][20] = {"Goldenrod3", "Goldenrod2", "Goldenrod1", "Gray21", "Blue"};//»­½çÃæµÄÑÕÉ«
-static double speedMap[GEM + 1] = {0.1, 0.05, 0.01, 0.01, 0.1};//¹³×ÓÅöµ½¿óºóµÄ·µ»ØËÙ¶È
+static char colorMap[GEM + 1][20] = {"Gold3", "Gold2", "Gold1", "Gray", "Ivory"};                    //»­¿óÓÃµÄÑÕÉ«
+static char outColorMap[GEM + 1][20] = {"Goldenrod3", "Goldenrod2", "Goldenrod1", "Gray21", "Blue"}; //»­½çÃæµÄÑÕÉ«
+static double speedMap[GEM + 1] = {0.1, 0.05, 0.01, 0.01, 0.1};                                      //¹³×ÓÅöµ½¿óºóµÄ·µ»ØËÙ¶È
 static button *pause;
 
-int checkIntersect(gold aGold)//Ëæ»úÉú³É¿óµÄÊ±ºò£¬¼ì²éÊÇ·ñÓĞÁ½¸ö¿óÏà½»
+int checkIntersect(gold aGold) //Ëæ»úÉú³É¿óµÄÊ±ºò£¬¼ì²éÊÇ·ñÓĞÁ½¸ö¿óÏà½»
 {
     linkHead p = linkGold;
     double l1, r1, l2, r2, u1, d1, u2, d2;
     l1 = aGold.x, d1 = aGold.y;
     r1 = aGold.x + width / ratioMap[aGold.type];
-    u1 = aGold.y + height / ratioMap[aGold.type];//¼´½«Éú³ÉµÄ¿óµÄ×´Ì¬
-    while (p != NULL)//±éÀúÁ´±í£¬¼ì²éÊÇ·ñÏà½»
+    u1 = aGold.y + height / ratioMap[aGold.type]; //¼´½«Éú³ÉµÄ¿óµÄ×´Ì¬
+    while (p != NULL)                             //±éÀúÁ´±í£¬¼ì²éÊÇ·ñÏà½»
     {
         gold *cur = p->data;
         l2 = cur->x, d2 = cur->y;
         r2 = cur->x + width / ratioMap[cur->type];
         u2 = cur->y + height / ratioMap[cur->type];
         if (min(r1, r2) > max(l1, l2) || min(u1, u2) > max(d1, d2))
-            return 0;//Ïà½»
+            return 0; //Ïà½»
         p = p->next;
     }
-    return 1;//²»Ïà½»
+    return 1; //²»Ïà½»
 }
 
-void clearGold()//Çå³ı¿ó
+void clearGold() //Çå³ı¿ó
 {
     while (linkGold != NULL)
         linkGold = delNode(linkGold, linkGold);
     // score = 0;
 }
 
-void generateGold(int type)//¸ù¾İ¿óµÄÀàĞÍ²úÉú¿ó
+void generateGold(int type) //¸ù¾İ¿óµÄÀàĞÍ²úÉú¿ó
 {
     linkHead p = linkGold;
     gold *aGold = malloc(sizeof(gold));
@@ -71,14 +71,14 @@ void generateGold(int type)//¸ù¾İ¿óµÄÀàĞÍ²úÉú¿ó
     {
         aGold->x = RandomReal(0, width * boundRatio);
         aGold->y = RandomReal(0, height * boundRatio * 5 / 7);
-    } while (!checkIntersect(*aGold));//Ò»Ö±²úÉú¿ó£¬Ö±µ½Æä²»Óëµ±Ç°ÈÎºÎ¿óÏà½»
+    } while (!checkIntersect(*aGold)); //Ò»Ö±²úÉú¿ó£¬Ö±µ½Æä²»Óëµ±Ç°ÈÎºÎ¿óÏà½»
     linkGold = insNode(linkGold, aGold);
 }
 
-void drawGold()//¹¹½¨Íê¿óµÄÁ´±íºó£¬»­³ö¿ó
+void drawGold() //¹¹½¨Íê¿óµÄÁ´±íºó£¬»­³ö¿ó
 {
     linkHead p = linkGold;
-    while (p != NULL)//±éÀú¿óµÄÁ´±íµÄÃ¿Ò»¸ö½Úµã£¬²¢»­Í¼
+    while (p != NULL) //±éÀú¿óµÄÁ´±íµÄÃ¿Ò»¸ö½Úµã£¬²¢»­Í¼
     {
         gold *cur = p->data;
         SetPenColor(outColorMap[cur->type]);
@@ -90,7 +90,7 @@ void drawGold()//¹¹½¨Íê¿óµÄÁ´±íºó£¬»­³ö¿ó
     }
 }
 
-linkNode *checkMeet(double x, double y)//¼ì²é¹³×ÓÊÇ·ñÅöµ½ÁË¿ó£¬Èç¹ûÅöµ½£¬·µ»Ø¿óµÄÖ¸Õë
+linkNode *checkMeet(double x, double y) //¼ì²é¹³×ÓÊÇ·ñÅöµ½ÁË¿ó£¬Èç¹ûÅöµ½£¬·µ»Ø¿óµÄÖ¸Õë
 {
     linkNode *p = linkGold;
     gold *cur = NULL;
@@ -98,13 +98,13 @@ linkNode *checkMeet(double x, double y)//¼ì²é¹³×ÓÊÇ·ñÅöµ½ÁË¿ó£¬Èç¹ûÅöµ½£¬·µ»Ø¿óµ
     {
         cur = p->data;
         if (x >= cur->x - .8 * cLength && x <= cur->x + width / ratioMap[cur->type] + .8 * cLength && y >= cur->y && y <= cur->y + height / ratioMap[cur->type] + cLength)
-            return p;//×¥µ½ÁË
+            return p; //×¥µ½ÁË
         p = p->next;
     }
-    return NULL;//Ã»×¥µ½
+    return NULL; //Ã»×¥µ½
 }
 
-void displayBoard()//»­±³¾°
+void displayBoard() //»­±³¾°
 {
     double width = GetWindowWidth();
     double height = GetWindowHeight();
@@ -118,7 +118,7 @@ void displayBoard()//»­±³¾°
     DrawArc(r, 0, 180);
 }
 
-void displayState()//±êÃ÷×´Ì¬
+void displayState() //±êÃ÷×´Ì¬
 {
     SetPenColor("Gray21");
     static char stateText[MAX_TEXT_LENGTH + 1];
@@ -127,13 +127,13 @@ void displayState()//±êÃ÷×´Ì¬
     DrawTextString(stateText);
 }
 
-void generateMap()//Ëæ»ú²úÉúµØÍ¼
+void generateMap() //Ëæ»ú²úÉúµØÍ¼
 {
     countdown = 60 * 1000;
     target += 500 * (level + 1);
     state = WAITING;
     clearGold();
-    int i, j, counter[5];//¸÷ÖÖ¿ó²úÉú¶àÉÙ¸ö
+    int i, j, counter[5]; //¸÷ÖÖ¿ó²úÉú¶àÉÙ¸ö
     counter[SMALL] = RandomInteger(2, min(4, 3 + level));
     counter[MEDIUM] = RandomInteger(1, 2);
     counter[LARGE] = RandomInteger(max(1, 2 - level), max(1, 2 - level));
@@ -144,7 +144,7 @@ void generateMap()//Ëæ»ú²úÉúµØÍ¼
             generateGold(i);
 }
 
-void refresh()//Ë¢ĞÂ½çÃæ
+void refresh() //Ë¢ĞÂ½çÃæ
 {
     clearScreen();
     displayBoard();
@@ -153,7 +153,7 @@ void refresh()//Ë¢ĞÂ½çÃæ
     drawButton(pause);
 }
 
-void drawHook(double x, double y, double theta)//»­¹³×Ó
+void drawHook(double x, double y, double theta) //»­¹³×Ó
 {
     SetPenColor("Gray21");
     MovePen(x, y);
@@ -164,18 +164,8 @@ void drawHook(double x, double y, double theta)//»­¹³×Ó
     drawVector(cLength, theta + pi / 10);
 }
 
-void drawSuccess()//»­Í¨¹Ø½çÃæ
+void drawSuccess() //»­Í¨¹Ø½çÃæ
 {
-    // SetEraseMode(TRUE);
-    // refresh();
-    // clearScreen();
-    // clearScreen();
-    // clearScreen();
-    // clearScreen();
-    // clearScreen();
-    // clearScreen();
-    // SetEraseMode(FALSE);
-    // displayBoard();
     SetPenColor("Green");
     SetPenSize(8);
     static char stateText[MAX_TEXT_LENGTH + 1];
@@ -185,7 +175,11 @@ void drawSuccess()//»­Í¨¹Ø½çÃæ
     SetPenSize(1);
 }
 
-void runtime()//Íæ»Æ½ğ¿ó¹¤Ê±µÄ¶¯»­
+void drawFailure() //»­Ê§°Ü½çÃæ
+{
+}
+
+void runtime() //Íæ»Æ½ğ¿ó¹¤Ê±µÄ¶¯»­
 {
     static double theta = pi;
     static double dTheta = 0;
@@ -193,55 +187,57 @@ void runtime()//Íæ»Æ½ğ¿ó¹¤Ê±µÄ¶¯»­
     static double centerX;
     static double centerY;
     static linkNode *got;
-    if (countdown <= 0)//Ê±¼äµ½
+    if (countdown <= 0) //Ê±¼äµ½
     {
         cancelTimer(defaultTimer);
         got = NULL;
-        if (score >= target)//Íê³ÉÄ¿±ê
+        if (score >= target) //Íê³ÉÄ¿±ê
         {
             level++;
             drawSuccess();
             startTimer(successTimer, 5000);
         }
-        else//Î´Íê³ÉÄ¿±ê
+        else //Î´Íê³ÉÄ¿±ê
         {
-            // TODO: draw sth
             level = 0;
+            drwaFailure();
             startTimer(failureTimer, 5000);
         }
+        return;
     }
     countdown -= refreshInterval;
 
     double dx, dy;
     double cx = cLength * cos(theta), cy = cLength * sin(theta);
-    switch (state)//·Ö¹³×ÓµÄ×´Ì¬»­
+    switch (state) //·Ö¹³×ÓµÄ×´Ì¬»­
     {
-    case WAITING://µÈ´ı×´Ì¬£¬¹³×ÓĞı×ª
+    case WAITING: //µÈ´ı×´Ì¬£¬¹³×ÓĞı×ª
+        dR = originSpeed;
         centerX = width * .5;
         centerY = height * boardRatio;
         dTheta -= 0.001 * cos(theta);
         theta += dTheta;
         break;
 
-    case DOWN://ÏÂ½µ×´Ì¬£¬¼ì²âÊÇ·ñ×¥µ½¿ó
+    case DOWN: //ÏÂ½µ×´Ì¬£¬¼ì²âÊÇ·ñ×¥µ½¿ó
         dx = dR * cos(theta), dy = dR * sin(theta);
         centerX += dx;
         centerY += dy;
         got = checkMeet(centerX + cx, centerY + cy);
-        if (got != NULL)//×¥µ½¿ó
+        if (got != NULL) //×¥µ½¿ó
         {
             state = UP;
             gold *cur = got->data;
             dR = speedMap[cur->type];
         }
-        if (centerX <= 0 || centerX >= width || centerY <= 0)//³¬³ö±ß½ç
+        if (centerX <= 0 || centerX >= width || centerY <= 0) //³¬³ö±ß½ç
         {
             state = UP;
             dR *= 2;
         }
         break;
 
-    case UP://ÉÏÉı×´Ì¬£¬ÅĞ¶ÏÊÇ·ñĞ¯´ø¿ó
+    case UP: //ÉÏÉı×´Ì¬£¬ÅĞ¶ÏÊÇ·ñĞ¯´ø¿ó
         dx = dR * cos(theta), dy = dR * sin(theta);
         centerX -= dx;
         centerY -= dy;
@@ -251,7 +247,7 @@ void runtime()//Íæ»Æ½ğ¿ó¹¤Ê±µÄ¶¯»­
             cur->x -= dx;
             cur->y -= dy;
         }
-        if (centerY >= height * boardRatio)//¹³×Ó»Øµ½Ô­µã
+        if (centerY >= height * boardRatio) //¹³×Ó»Øµ½Ô­µã
         {
             if (got != NULL)
             {
@@ -265,7 +261,7 @@ void runtime()//Íæ»Æ½ğ¿ó¹¤Ê±µÄ¶¯»­
         }
         break;
     }
-    refresh();//Ë¢ĞÂµ±Ç°µÄÍ¼
+    refresh(); //Ë¢ĞÂµ±Ç°µÄÍ¼
     MovePen(width * .5, height * boardRatio);
     DrawLine(centerX - width * .5, centerY - height * boardRatio);
     SetPenColor("Black");
@@ -274,20 +270,20 @@ void runtime()//Íæ»Æ½ğ¿ó¹¤Ê±µÄ¶¯»­
     drawHook(centerX + cx, centerY + cy, theta);
 }
 
-void moniter(int timerID)//¸ù¾İÊ±¼äÖ´ĞĞ
+void moniter(int timerID) //¸ù¾İÊ±¼äÖ´ĞĞ
 {
     switch (timerID)
     {
-    case defaultTimer://ÓÎÏ·ÖĞ
+    case defaultTimer: //ÓÎÏ·ÖĞ
         runtime();
         break;
 
-    case successTimer://ÓÎÏ·½áÊø£¬Í¨¹Ø
+    case successTimer: //ÓÎÏ·½áÊø£¬Í¨¹Ø
         cancelTimer(successTimer);
         initGame();
         break;
 
-    case failureTimer://ÓÎÏ·½áÊø£¬Ã»Í¨¹Ø
+    case failureTimer: //ÓÎÏ·½áÊø£¬Ã»Í¨¹Ø
         cancelTimer(failureTimer);
         disableButton(pause);
         score = 0;
@@ -296,7 +292,7 @@ void moniter(int timerID)//¸ù¾İÊ±¼äÖ´ĞĞ
     }
 }
 
-void handler(int key, int event)//ÓÃ»§°´¡°ÏÂ¼ü¡±£¬·ÅÏÂ¹³×Ó
+void handler(int key, int event) //ÓÃ»§°´¡°ÏÂ¼ü¡±£¬·ÅÏÂ¹³×Ó
 {
     if (key == VK_DOWN && event == KEY_DOWN && state == WAITING)
     {
@@ -304,15 +300,15 @@ void handler(int key, int event)//ÓÃ»§°´¡°ÏÂ¼ü¡±£¬·ÅÏÂ¹³×Ó
     }
 }
 
-void pauseGame()//ÔİÍ£ÓÎÏ·
+void pauseGame() //ÔİÍ£ÓÎÏ·
 {
     static int preState;
-    if (state == PAUSED)//µ±Ç°ÒÑÔİÍ££¬»Ö¸´
+    if (state == PAUSED) //µ±Ç°ÒÑÔİÍ££¬»Ö¸´
     {
         state = preState;
         startTimer(defaultTimer, refreshInterval);
     }
-    else//µ±Ç°Î´ÔİÍ££¬¼´ÔİÍ£
+    else //µ±Ç°Î´ÔİÍ££¬¼´ÔİÍ£
     {
         preState = state;
         state = PAUSED;
@@ -320,7 +316,7 @@ void pauseGame()//ÔİÍ£ÓÎÏ·
     }
 }
 
-void initButton()//³õÊ¼»¯°´Å¥
+void initButton() //³õÊ¼»¯°´Å¥
 {
     double buttonWidth = 0.6, buttonHeight = 0.3, delta = 0.05;
     pause = createButton(delta, height - buttonHeight - delta, buttonWidth, buttonHeight, "ÔİÍ£", &pauseGame);
@@ -329,7 +325,7 @@ void initButton()//³õÊ¼»¯°´Å¥
     enableButton(pause);
 }
 
-void initGame()//ÓÎÏ·³õÊ¼»¯
+void initGame() //ÓÎÏ·³õÊ¼»¯
 {
     if (pause == NULL)
         initButton();

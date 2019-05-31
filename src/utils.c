@@ -3,12 +3,12 @@
 #include <math.h>
 #include <string.h>
 
-void addColor(string name, int r, int g, int b)//æ·»åŠ é¢œè‰²
+void addColor(string name, int r, int g, int b) //Ìí¼ÓÑÕÉ«
 {
     DefineColor(name, 1.0 * r / 255, 1.0 * g / 255, 1.0 * b / 255);
 }
 
-void initColor()//è‡ªå®šä¹‰é¢œè‰²
+void initColor() //×Ô¶¨ÒåÑÕÉ«
 {
     addColor("Azure", 240, 255, 255);
     addColor("Gold1", 255, 215, 0);
@@ -24,7 +24,7 @@ void initColor()//è‡ªå®šä¹‰é¢œè‰²
     addColor("Ivory", 255, 255, 240);
 }
 
-void drawRectangle(double x, double y, double width, double height)//ç”»çŸ©å½¢
+void drawRectangle(double x, double y, double width, double height) //»­¾ØĞÎ
 {
     MovePen(x, y);
     DrawLine(width, 0);
@@ -33,25 +33,25 @@ void drawRectangle(double x, double y, double width, double height)//ç”»çŸ©å½¢
     DrawLine(0, -height);
 }
 
-void drawFilledRect(double x, double y, double width, double height)//åœ¨çŸ©å½¢ä¸­å¡«å……é¢œè‰²
+void drawFilledRect(double x, double y, double width, double height) //ÔÚ¾ØĞÎÖĞÌî³äÑÕÉ«
 {
     StartFilledRegion(1);
     drawRectangle(x, y, width, height);
     EndFilledRegion();
 }
 
-void drawCircle(double x, double y, double r)//ç”»åœ†
+void drawCircle(double x, double y, double r) //»­Ô²
 {
     MovePen(x + r, y);
     DrawArc(r, 0, 360);
 }
 
-void drawVector(double r, double theta)//ç”»å‘é‡
+void drawVector(double r, double theta) //»­ÏòÁ¿
 {
     DrawLine(r * cos(theta), r * sin(theta));
 }
 
-void clearScreen()//æ¸…å±å¹•
+void clearScreen() //ÇåÆÁÄ»
 {
     string preColor = GetPenColor();
     SetPenColor("Azure");
@@ -63,7 +63,7 @@ void clearScreen()//æ¸…å±å¹•
     SetPenColor(preColor);
 }
 
-button *createButton(double x, double y, double width, double height, char text[], buttonClickCallBack cb)//ç”»æŒ‰é’®
+button *createButton(double x, double y, double width, double height, char text[], buttonClickCallBack cb) //»­°´Å¥
 {
     button *b = malloc(sizeof(button));
     b->x = x;
@@ -76,7 +76,7 @@ button *createButton(double x, double y, double width, double height, char text[
     return b;
 }
 
-void drawRoundRectangle(double x, double y, double w, double h)//å››ä¸ªè§’æ˜¯åœ†çš„çš„çŸ©å½¢
+void drawRoundRectangle(double x, double y, double w, double h) //ËÄ¸ö½ÇÊÇÔ²µÄµÄ¾ØĞÎ
 {
     double r = 0.05;
     MovePen(x + r, y);
@@ -90,7 +90,7 @@ void drawRoundRectangle(double x, double y, double w, double h)//å››ä¸ªè§’æ˜¯åœ†
     DrawArc(r, 180, 90);
 }
 
-void drawButton(button *b)//ç”»æŒ‰é’®
+void drawButton(button *b) //»­°´Å¥
 {
     SetPenColor("Gray21");
     drawRoundRectangle(b->x, b->y, b->width, b->height);
@@ -98,12 +98,12 @@ void drawButton(button *b)//ç”»æŒ‰é’®
     DrawTextString(b->text);
 }
 
-void enableButton(button *b)//å¼€å¯æŒ‰é’®
+void enableButton(button *b) //¿ªÆô°´Å¥
 {
     b->disabled = FALSE;
 }
 
-void disableButton(button *b)//å…³é—­æŒ‰é’®
+void disableButton(button *b) //¹Ø±Õ°´Å¥
 {
     b->disabled = TRUE;
 }
@@ -114,7 +114,7 @@ bool isIn(button *b, int xi, int yi)
     return x >= b->x && x <= b->x + b->width && y >= b->y && y <= b->y + b->height;
 }
 
-linkHead insNode(linkHead head, void *data)//å°†æ•°æ®æ’å…¥é“¾è¡¨
+linkHead insNode(linkHead head, void *data) //½«Êı¾İ²åÈëÁ´±í
 {
     linkNode *newHead = newNode();
     newHead->data = data;
@@ -126,7 +126,7 @@ linkHead insNode(linkHead head, void *data)//å°†æ•°æ®æ’å…¥é“¾è¡¨
     return newHead;
 }
 
-linkHead delNode(linkHead head, linkNode *node)//å°†èŠ‚ç‚¹ä»é“¾è¡¨ä¸­åˆ é™¤
+linkHead delNode(linkHead head, linkNode *node) //½«½Úµã´ÓÁ´±íÖĞÉ¾³ı
 {
     if (node->pre != NULL)
     {
@@ -146,23 +146,23 @@ linkHead delNode(linkHead head, linkNode *node)//å°†èŠ‚ç‚¹ä»é“¾è¡¨ä¸­åˆ é™¤
     return head;
 }
 
-linkNode *newNode()//æ–°å»ºé“¾è¡¨
+linkNode *newNode() //ĞÂ½¨Á´±í
 {
     linkNode *head = (linkNode *)malloc(sizeof(linkNode));
     head->pre = head->next = NULL;
     return head;
 }
 
-linkHead buttonList;//æŒ‰é’®çš„é“¾è¡¨
+linkHead buttonList; //°´Å¥µÄÁ´±í
 
-void buttonCallBack(int x, int y, int bt, int event)//æŒ‰é’®ååº”
+void buttonCallBack(int x, int y, int bt, int event) //°´Å¥·´Ó¦
 {
     if (bt != LEFT_BUTTON || event != BUTTON_DOWN)
     {
         return;
     }
     linkNode *p = buttonList;
-    while (p != NULL)//éå†æŒ‰é’®çš„é“¾è¡¨ï¼Œæ£€æµ‹æ˜¯å¦ç‚¹åˆ°äº†
+    while (p != NULL) //±éÀú°´Å¥µÄÁ´±í£¬¼ì²âÊÇ·ñµãµ½ÁË
     {
         button *currentButton = p->data;
         if (!currentButton->disabled && isIn(p->data, x, y))
@@ -173,7 +173,7 @@ void buttonCallBack(int x, int y, int bt, int event)//æŒ‰é’®ååº”
     }
 }
 
-void insButton(button *b)//å‘æŒ‰é’®é“¾è¡¨ä¸­æ’å…¥
+void insButton(button *b) //Ïò°´Å¥Á´±íÖĞ²åÈë
 {
     buttonList = insNode(buttonList, b);
 }

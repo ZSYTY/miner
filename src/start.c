@@ -7,21 +7,21 @@ double height;
 static button *start = NULL, *resume = NULL, *quit = NULL;
 static linkHead buttonList;
 
-void insAll()//插入按钮
+void insAll() //插入按钮
 {
     insButton(start);
     insButton(resume);
     insButton(quit);
 }
 
-void enableAll()//开启按钮
+void enableAll() //开启按钮
 {
     enableButton(start);
     enableButton(resume);
     enableButton(quit);
 }
 
-void disableAll()//关闭按钮
+void disableAll() //关闭按钮
 {
     disableButton(start);
     disableButton(resume);
@@ -154,7 +154,7 @@ void MineCar(double x, double y, char *b)
     DrawTextString(b);
 }
 
-void drawStartPage(double width, double height)//开始界面
+void drawStartPage(double width, double height) //开始界面
 {
     SetPenColor("Azure");
     drawFilledRect(width, height, -width, -height);
@@ -167,14 +167,14 @@ void drawStartPage(double width, double height)//开始界面
     MineCar(width / 2 + 1.6, height / 2 - 1.5, "退出游戏");
 }
 
-void initStartPage()//初始化开始界面
+void initStartPage() //初始化开始界面
 {
     width = GetWindowWidth();
     height = GetWindowHeight();
 
     drawStartPage(width, height);
 
-    double buttonWidth = width / 4;
+    double buttonWidth = width / 8;
     double buttonHeight = 1;
 
     if (start == NULL)
@@ -185,23 +185,23 @@ void initStartPage()//初始化开始界面
         registerMouseEvent(buttonCallBack);
         insAll();
     }
-    
+
     enableAll();
 }
 
-void startGame()//开始游戏
+void startGame() //开始游戏
 {
     disableAll();
     initGame();
 }
 
-void resumeGame()//继续游戏
+void resumeGame() //继续游戏
 {
     disableAll();
     initGame();
 }
 
-void quitGame()//退出游戏
+void quitGame() //退出游戏
 {
     ExitGraphics();
 }
