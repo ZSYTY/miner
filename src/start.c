@@ -47,17 +47,17 @@ void L(double x, double y)
 
 void O(double x, double y)
 {
-	SetPenColor("Silver");
-	MovePen(x+0.3,y - 0.1);
-	StartFilledRegion(1);
-	DrawArc(0.5,0,360);
-	EndFilledRegion();
+    SetPenColor("Silver");
+    MovePen(x + 0.3, y - 0.1);
+    StartFilledRegion(1);
+    DrawArc(0.5, 0, 360);
+    EndFilledRegion();
     SetPenColor("White");
     MovePen(x + 0.2, y - 0.1);
     StartFilledRegion(1);
     DrawArc(0.4, 0, 360);
     EndFilledRegion();
-    MovePen(x, y-0.06);
+    MovePen(x, y - 0.06);
     SetPenColor("Black");
     StartFilledRegion(1);
     DrawArc(0.2, 0, 360);
@@ -76,7 +76,7 @@ void DrawFace(double x, double y)
 {
     O(x - 0.8, y + 0.5);
     G(x - 1.6, y - 0.8);
-    L(x + 0.1 , y - 0.8);
+    L(x + 0.1, y - 0.8);
     SetPenColor("Black");
     drawFilledRect(x - 1.4, y - 0.7, 0.8, 0.05);
 }
@@ -85,7 +85,7 @@ void DrawSmile(double x, double y)
 {
     O(x - 0.8, y + 0.5);
     G(x - 1.6, y - 0.8);
-    L(x + 0.1 , y - 0.8);
+    L(x + 0.1, y - 0.8);
     D(x - 1.5, y - 0.4);
 }
 
@@ -96,11 +96,11 @@ void DrawAngry(double x, double y)
     SetPenColor("Gray");
     drawFilledRect(x, y - 0.55, 0.3, 0.2);
     drawFilledRect(x + 0.2, y - 0.35, 0.2, -1.2);
-    MovePen(x - 0.6, y-0.8);
+    MovePen(x - 0.6, y - 0.8);
     SetPenColor("Red");
     StartFilledRegion(1);
     DrawArc(0.4, 0, 180);
-    DrawEllipticalArc(-0.4,0.2,0,180);
+    DrawEllipticalArc(-0.4, 0.2, 0, 180);
     EndFilledRegion();
 }
 
@@ -127,8 +127,8 @@ void DrawHat(double x, double y)
 
 void DrawBody(double x, double y)
 {
-	SetPenColor("Yellow");
-	drawFilledRect(x - 2.2, y - 1.1,2.2,2.2);
+    SetPenColor("Yellow");
+    drawFilledRect(x - 2.2, y - 1.1, 2.2, 2.2);
     SetPenColor("Blue");
     MovePen(x - 2.2, y - 1.1);
     StartFilledRegion(1);
