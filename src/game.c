@@ -274,20 +274,20 @@ void runtime()//玩黄金矿工时的动画
     drawHook(centerX + cx, centerY + cy, theta);
 }
 
-void moniter(int timerID)
+void moniter(int timerID)//根据时间执行
 {
     switch (timerID)
     {
-    case defaultTimer:
+    case defaultTimer://游戏中
         runtime();
         break;
 
-    case successTimer:
+    case successTimer://游戏结束，通关
         cancelTimer(successTimer);
         initGame();
         break;
 
-    case failureTimer:
+    case failureTimer://游戏结束，没通关
         cancelTimer(failureTimer);
         disableButton(pause);
         score = 0;
@@ -296,7 +296,7 @@ void moniter(int timerID)
     }
 }
 
-void handler(int key, int event)
+void handler(int key, int event)//用户按“下键”，放下钩子
 {
     if (key == VK_DOWN && event == KEY_DOWN && state == WAITING)
     {
@@ -304,15 +304,15 @@ void handler(int key, int event)
     }
 }
 
-void pauseGame()
+void pauseGame()//暂停游戏
 {
     static int preState;
-    if (state == PAUSED)
+    if (state == PAUSED)//当前已暂停，恢复
     {
         state = preState;
         startTimer(defaultTimer, refreshInterval);
     }
-    else
+    else//当前未暂停，即暂停
     {
         preState = state;
         state = PAUSED;
@@ -320,7 +320,7 @@ void pauseGame()
     }
 }
 
-void initButton()
+void initButton()//初始化按钮
 {
     double buttonWidth = 0.6, buttonHeight = 0.3, delta = 0.05;
     pause = createButton(delta, height - buttonHeight - delta, buttonWidth, buttonHeight, "暂停", &pauseGame);
@@ -329,7 +329,7 @@ void initButton()
     enableButton(pause);
 }
 
-void initGame()
+void initGame()//游戏初始化
 {
     if (pause == NULL)
         initButton();
