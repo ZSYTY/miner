@@ -200,7 +200,7 @@ void runtime() //玩黄金矿工时的动画
         else //未完成目标
         {
             level = 0;
-            drwaFailure();
+            drawFailure();
             startTimer(failureTimer, 5000);
         }
         return;
@@ -306,12 +306,15 @@ void pauseGame() //暂停游戏
     if (state == PAUSED) //当前已暂停，恢复
     {
         state = preState;
+        strcpy(pause->text, "暂停");
         startTimer(defaultTimer, refreshInterval);
     }
     else //当前未暂停，即暂停
     {
         preState = state;
         state = PAUSED;
+        strcpy(pause->text, "继续");
+        runtime();
         cancelTimer(defaultTimer);
     }
 }
