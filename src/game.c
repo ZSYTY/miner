@@ -331,20 +331,6 @@ void handler(int key, int event) //用户按“下键”，放下钩子
     }
 }
 
-void saveGame() // 保存游戏
-{
-    FILE *fp = fopen(savefile, "w");
-    fprintf(fp, "%d %d %d\n", score, level, countdown);
-    linkNode *p = linkGold;
-    while (p != NULL)
-    {
-        gold *cur = p->data;
-        fprintf(fp, "%lf %lf %d\n", cur->x, cur->y, cur->type);
-        p = p->next;
-    }
-    fclose(fp);
-}
-
 void pauseGame() //暂停游戏
 {
     static int preState;
@@ -373,6 +359,31 @@ void pauseGame() //暂停游戏
     }
 }
 
+void saveGame() // 保存游戏
+{
+    FILE *fp = fopen(savefile, "w");
+    fprintf(fp, "%d %d %d\n", score, level, countdown);
+    linkNode *p = linkGold;
+    while (p != NULL)
+    {
+        gold *cur = p->data;
+        fprintf(fp, "%lf %lf %d\n", cur->x, cur->y, cur->type);
+        p = p->next;
+    }
+    fclose(fp);
+
+    pauseGame();
+}
+
+void returnMenu() // 返回主菜单
+{
+    disableButton(pause);
+    disableButton(save);
+    disableButton(resume);
+    disableButton(quit);
+    initStartPage();
+}
+
 void initButton() //初始化按钮
 {
     double buttonWidth = 0.6, buttonHeight = 0.3, delta = 0.05;
@@ -386,7 +397,7 @@ void initButton() //初始化按钮
 
     save = createButton(width / 2, height / 2 + 0.5, buttonWidth, buttonHeight, "保存游戏", &saveGame);
     resume = createButton(width / 2 + 0.8, height / 2 - 0.5, buttonWidth, buttonHeight, "继续游戏", &pauseGame);
-    quit = createButton(width / 2 + 1.6, height / 2 - 1.5, buttonWidth, buttonHeight, "退出游戏", &quitGame);
+    quit = createButton(width / 2 + 1.6, height / 2 - 1.5, buttonWidth, buttonHeight, "退出游戏", &returnMenu);
     insButton(save);
     insButton(resume);
     insButton(quit);

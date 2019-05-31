@@ -20,6 +20,7 @@ typedef struct
 } gold;
 
 void initGame();
+void saveGame();
 void loadGame();
 
 #endif

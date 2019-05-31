@@ -194,6 +194,7 @@ void buttonCallBack(int x, int y, int bt, int event) //°´Å¥·´Ó¦
         if (!currentButton->disabled && isIn(p->data, x, y))
         {
             (*currentButton->callback)();
+            return;
         }
         p = p->next;
     }
