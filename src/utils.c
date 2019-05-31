@@ -3,12 +3,12 @@
 #include <math.h>
 #include <string.h>
 
-void addColor(string name, int r, int g, int b)
+void addColor(string name, int r, int g, int b)//添加颜色
 {
     DefineColor(name, 1.0 * r / 255, 1.0 * g / 255, 1.0 * b / 255);
 }
 
-void initColor()
+void initColor()//自定义颜色
 {
     addColor("Azure", 240, 255, 255);
     addColor("Gold1", 255, 215, 0);
@@ -24,7 +24,7 @@ void initColor()
     addColor("Ivory", 255, 255, 240);
 }
 
-void drawRectangle(double x, double y, double width, double height)
+void drawRectangle(double x, double y, double width, double height)//画矩形
 {
     MovePen(x, y);
     DrawLine(width, 0);
@@ -33,25 +33,25 @@ void drawRectangle(double x, double y, double width, double height)
     DrawLine(0, -height);
 }
 
-void drawFilledRect(double x, double y, double width, double height)
+void drawFilledRect(double x, double y, double width, double height)//在矩形中填充颜色
 {
     StartFilledRegion(1);
     drawRectangle(x, y, width, height);
     EndFilledRegion();
 }
 
-void drawCircle(double x, double y, double r)
+void drawCircle(double x, double y, double r)//画圆
 {
     MovePen(x + r, y);
     DrawArc(r, 0, 360);
 }
 
-void drawVector(double r, double theta)
+void drawVector(double r, double theta)//画向量
 {
     DrawLine(r * cos(theta), r * sin(theta));
 }
 
-void clearScreen()
+void clearScreen()//清屏幕
 {
     string preColor = GetPenColor();
     SetPenColor("Azure");
@@ -63,7 +63,7 @@ void clearScreen()
     SetPenColor(preColor);
 }
 
-button *createButton(double x, double y, double width, double height, char text[], buttonClickCallBack cb)
+button *createButton(double x, double y, double width, double height, char text[], buttonClickCallBack cb)//画按钮
 {
     button *b = malloc(sizeof(button));
     b->x = x;
@@ -76,7 +76,7 @@ button *createButton(double x, double y, double width, double height, char text[
     return b;
 }
 
-void drawRoundRectangle(double x, double y, double w, double h)
+void drawRoundRectangle(double x, double y, double w, double h)//四个角是圆的的矩形
 {
     double r = 0.05;
     MovePen(x + r, y);
@@ -90,7 +90,7 @@ void drawRoundRectangle(double x, double y, double w, double h)
     DrawArc(r, 180, 90);
 }
 
-void drawButton(button *b)
+void drawButton(button *b)//画按钮
 {
     SetPenColor("Gray21");
     drawRoundRectangle(b->x, b->y, b->width, b->height);
@@ -98,12 +98,12 @@ void drawButton(button *b)
     DrawTextString(b->text);
 }
 
-void enableButton(button *b)
+void enableButton(button *b)//开启按钮
 {
     b->disabled = FALSE;
 }
 
-void disableButton(button *b)
+void disableButton(button *b)//关闭按钮
 {
     b->disabled = TRUE;
 }
@@ -114,7 +114,7 @@ bool isIn(button *b, int xi, int yi)
     return x >= b->x && x <= b->x + b->width && y >= b->y && y <= b->y + b->height;
 }
 
-linkHead insNode(linkHead head, void *data)
+linkHead insNode(linkHead head, void *data)//将数据插入链表
 {
     linkNode *newHead = newNode();
     newHead->data = data;
@@ -126,7 +126,7 @@ linkHead insNode(linkHead head, void *data)
     return newHead;
 }
 
-linkHead delNode(linkHead head, linkNode *node)
+linkHead delNode(linkHead head, linkNode *node)//将节点从链表中删除
 {
     if (node->pre != NULL)
     {
@@ -146,23 +146,23 @@ linkHead delNode(linkHead head, linkNode *node)
     return head;
 }
 
-linkNode *newNode()
+linkNode *newNode()//新建链表
 {
     linkNode *head = (linkNode *)malloc(sizeof(linkNode));
     head->pre = head->next = NULL;
     return head;
 }
 
-linkHead buttonList;
+linkHead buttonList;//按钮的链表
 
-void buttonCallBack(int x, int y, int bt, int event)
+void buttonCallBack(int x, int y, int bt, int event)//按钮反应
 {
     if (bt != LEFT_BUTTON || event != BUTTON_DOWN)
     {
         return;
     }
     linkNode *p = buttonList;
-    while (p != NULL)
+    while (p != NULL)//遍历按钮的链表，检测是否点到了
     {
         button *currentButton = p->data;
         if (!currentButton->disabled && isIn(p->data, x, y))
@@ -173,7 +173,7 @@ void buttonCallBack(int x, int y, int bt, int event)
     }
 }
 
-void insButton(button *b)
+void insButton(button *b)//向按钮链表中插入
 {
     buttonList = insNode(buttonList, b);
 }

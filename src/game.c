@@ -14,11 +14,11 @@ enum
     DOWN,
     UP,
     PAUSED
-};
-static int score, target, level, countdown;
+};//状态参数
+static int score, target, level, countdown;//分数，目标分数，等级，时间倒数
 static int state;
-static linkHead linkGold;
-extern double width, height;
+static linkHead linkGold;//存储矿的链表
+extern double width, height;//屏的宽和高
 #define boardRatio (4.0 / 5)
 #define refreshInterval 20
 #define defaultTimer 1
@@ -29,39 +29,39 @@ extern double width, height;
 #define cLength 0.15
 static int scoreMap[GEM + 1] = {50, 100, 500, 20, 600};
 static int ratioMap[GEM + 1] = {60, 25, 10, 25, 60};
-static char colorMap[GEM + 1][20] = {"Gold3", "Gold2", "Gold1", "Gray", "Ivory"};
-static char outColorMap[GEM + 1][20] = {"Goldenrod3", "Goldenrod2", "Goldenrod1", "Gray21", "Blue"};
-static double speedMap[GEM + 1] = {0.1, 0.05, 0.01, 0.01, 0.1};
+static char colorMap[GEM + 1][20] = {"Gold3", "Gold2", "Gold1", "Gray", "Ivory"};//画矿用的颜色
+static char outColorMap[GEM + 1][20] = {"Goldenrod3", "Goldenrod2", "Goldenrod1", "Gray21", "Blue"};//画界面的颜色
+static double speedMap[GEM + 1] = {0.1, 0.05, 0.01, 0.01, 0.1};//钩子碰到矿后的返回速度
 static button *pause;
 
-int checkIntersect(gold aGold)
+int checkIntersect(gold aGold)//随机生成矿的时候，检查是否有两个矿相交
 {
     linkHead p = linkGold;
     double l1, r1, l2, r2, u1, d1, u2, d2;
     l1 = aGold.x, d1 = aGold.y;
     r1 = aGold.x + width / ratioMap[aGold.type];
-    u1 = aGold.y + height / ratioMap[aGold.type];
-    while (p != NULL)
+    u1 = aGold.y + height / ratioMap[aGold.type];//即将生成的矿的状态
+    while (p != NULL)//遍历链表，检查是否相交
     {
         gold *cur = p->data;
         l2 = cur->x, d2 = cur->y;
         r2 = cur->x + width / ratioMap[cur->type];
         u2 = cur->y + height / ratioMap[cur->type];
         if (min(r1, r2) > max(l1, l2) || min(u1, u2) > max(d1, d2))
-            return 0;
+            return 0;//相交
         p = p->next;
     }
-    return 1;
+    return 1;//不相交
 }
 
-void clearGold()
+void clearGold()//清除矿
 {
     while (linkGold != NULL)
         linkGold = delNode(linkGold, linkGold);
     // score = 0;
 }
 
-void generateGold(int type)
+void generateGold(int type)//根据矿的类型产生矿
 {
     linkHead p = linkGold;
     gold *aGold = malloc(sizeof(gold));
@@ -71,14 +71,14 @@ void generateGold(int type)
     {
         aGold->x = RandomReal(0, width * boundRatio);
         aGold->y = RandomReal(0, height * boundRatio * 5 / 7);
-    } while (!checkIntersect(*aGold));
+    } while (!checkIntersect(*aGold));//一直产生矿，直到其不与当前任何矿相交
     linkGold = insNode(linkGold, aGold);
 }
 
-void drawGold()
+void drawGold()//构建完矿的链表后，画出矿
 {
     linkHead p = linkGold;
-    while (p != NULL)
+    while (p != NULL)//遍历矿的链表的每一个节点，并画图
     {
         gold *cur = p->data;
         SetPenColor(outColorMap[cur->type]);
@@ -90,7 +90,7 @@ void drawGold()
     }
 }
 
-linkNode *checkMeet(double x, double y)
+linkNode *checkMeet(double x, double y)//检查钩子是否碰到了矿，如果碰到，返回矿的指针
 {
     linkNode *p = linkGold;
     gold *cur = NULL;
@@ -98,13 +98,13 @@ linkNode *checkMeet(double x, double y)
     {
         cur = p->data;
         if (x >= cur->x - .8 * cLength && x <= cur->x + width / ratioMap[cur->type] + .8 * cLength && y >= cur->y && y <= cur->y + height / ratioMap[cur->type] + cLength)
-            return p;
+            return p;//抓到了
         p = p->next;
     }
-    return NULL;
+    return NULL;//没抓到
 }
 
-void displayBoard()
+void displayBoard()//画背景
 {
     double width = GetWindowWidth();
     double height = GetWindowHeight();
@@ -118,7 +118,7 @@ void displayBoard()
     DrawArc(r, 0, 180);
 }
 
-void displayState()
+void displayState()//标明状态
 {
     SetPenColor("Gray21");
     static char stateText[MAX_TEXT_LENGTH + 1];
@@ -127,13 +127,13 @@ void displayState()
     DrawTextString(stateText);
 }
 
-void generateMap()
+void generateMap()//随机产生地图
 {
     countdown = 60 * 1000;
     target += 500 * (level + 1);
     state = WAITING;
     clearGold();
-    int i, j, counter[5];
+    int i, j, counter[5];//各种矿产生多少个
     counter[SMALL] = RandomInteger(2, min(4, 3 + level));
     counter[MEDIUM] = RandomInteger(1, 2);
     counter[LARGE] = RandomInteger(max(1, 2 - level), max(1, 2 - level));
@@ -144,7 +144,7 @@ void generateMap()
             generateGold(i);
 }
 
-void refresh()
+void refresh()//刷新界面
 {
     clearScreen();
     displayBoard();
@@ -153,7 +153,7 @@ void refresh()
     drawButton(pause);
 }
 
-void drawHook(double x, double y, double theta)
+void drawHook(double x, double y, double theta)//画钩子
 {
     SetPenColor("Gray21");
     MovePen(x, y);
@@ -164,7 +164,7 @@ void drawHook(double x, double y, double theta)
     drawVector(cLength, theta + pi / 10);
 }
 
-void drawSuccess()
+void drawSuccess()//画通关界面
 {
     // SetEraseMode(TRUE);
     // refresh();
@@ -185,7 +185,7 @@ void drawSuccess()
     SetPenSize(1);
 }
 
-void runtime()
+void runtime()//玩黄金矿工时的动画
 {
     static double theta = pi;
     static double dTheta = 0;
@@ -193,17 +193,17 @@ void runtime()
     static double centerX;
     static double centerY;
     static linkNode *got;
-    if (countdown <= 0)
+    if (countdown <= 0)//时间到
     {
         cancelTimer(defaultTimer);
         got = NULL;
-        if (score >= target)
+        if (score >= target)//完成目标
         {
             level++;
             drawSuccess();
             startTimer(successTimer, 5000);
         }
-        else
+        else//未完成目标
         {
             // TODO: draw sth
             level = 0;
@@ -214,34 +214,34 @@ void runtime()
 
     double dx, dy;
     double cx = cLength * cos(theta), cy = cLength * sin(theta);
-    switch (state)
+    switch (state)//分钩子的状态画
     {
-    case WAITING:
+    case WAITING://等待状态，钩子旋转
         centerX = width * .5;
         centerY = height * boardRatio;
         dTheta -= 0.001 * cos(theta);
         theta += dTheta;
         break;
 
-    case DOWN:
+    case DOWN://下降状态，检测是否抓到矿
         dx = dR * cos(theta), dy = dR * sin(theta);
         centerX += dx;
         centerY += dy;
         got = checkMeet(centerX + cx, centerY + cy);
-        if (got != NULL)
+        if (got != NULL)//抓到矿
         {
             state = UP;
             gold *cur = got->data;
             dR = speedMap[cur->type];
         }
-        if (centerX <= 0 || centerX >= width || centerY <= 0)
+        if (centerX <= 0 || centerX >= width || centerY <= 0)//超出边界
         {
             state = UP;
             dR *= 2;
         }
         break;
 
-    case UP:
+    case UP://上升状态，判断是否携带矿
         dx = dR * cos(theta), dy = dR * sin(theta);
         centerX -= dx;
         centerY -= dy;
@@ -251,7 +251,7 @@ void runtime()
             cur->x -= dx;
             cur->y -= dy;
         }
-        if (centerY >= height * boardRatio)
+        if (centerY >= height * boardRatio)//钩子回到原点
         {
             if (got != NULL)
             {
@@ -265,7 +265,7 @@ void runtime()
         }
         break;
     }
-    refresh();
+    refresh();//刷新当前的图
     MovePen(width * .5, height * boardRatio);
     DrawLine(centerX - width * .5, centerY - height * boardRatio);
     SetPenColor("Black");

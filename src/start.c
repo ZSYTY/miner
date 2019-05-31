@@ -7,27 +7,27 @@ double height;
 static button *start = NULL, *resume = NULL, *quit = NULL;
 static linkHead buttonList;
 
-void insAll()
+void insAll()//插入按钮
 {
     insButton(start);
     insButton(resume);
     insButton(quit);
 }
 
-void enableAll()
+void enableAll()//开启按钮
 {
     enableButton(start);
     enableButton(resume);
     enableButton(quit);
 }
 
-void disableAll()
+void disableAll()//关闭按钮
 {
     disableButton(start);
     disableButton(resume);
     disableButton(quit);
 }
-
+//画开始界面的矿工、矿车等
 void D(double x, double y)
 {
     MovePen(x, y);
@@ -114,7 +114,7 @@ void DrawBody(double x, double y)
     drawFilledRect(x - 1.1, y - 1.25, 0.6, -0.4);
 }
 
-void DrawChan(double x, double y)
+void DrawShovel(double x, double y)
 {
     SetPenColor("Brown");
     drawFilledRect(x, y, 0.4, 0.1);
@@ -154,20 +154,20 @@ void MineCar(double x, double y, char *b)
     DrawTextString(b);
 }
 
-void drawStartPage(double width, double height)
+void drawStartPage(double width, double height)//开始界面
 {
     SetPenColor("Azure");
     drawFilledRect(width, height, -width, -height);
     DrawFace(width / 2 - 1.5, height / 2);
     DrawHead(width / 2 - 1.5, height / 2);
-    DrawChan(width / 2 - 3.7, height / 2 - 1);
+    DrawShovel(width / 2 - 3.7, height / 2 - 1);
     DrawBody(width / 2 - 1.5, height / 2);
     MineCar(width / 2, height / 2 + 0.5, "开始游戏");
     MineCar(width / 2 + 0.8, height / 2 - 0.5, "继续游戏");
     MineCar(width / 2 + 1.6, height / 2 - 1.5, "退出游戏");
 }
 
-void initStartPage()
+void initStartPage()//初始化开始界面
 {
     width = GetWindowWidth();
     height = GetWindowHeight();
@@ -189,19 +189,19 @@ void initStartPage()
     enableAll();
 }
 
-void startGame()
+void startGame()//开始游戏
 {
     disableAll();
     initGame();
 }
 
-void resumeGame()
+void resumeGame()//继续游戏
 {
     disableAll();
     initGame();
 }
 
-void quitGame()
+void quitGame()//退出游戏
 {
     ExitGraphics();
 }
