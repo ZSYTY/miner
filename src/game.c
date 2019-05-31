@@ -141,7 +141,7 @@ void displayState() //标明状态
 void generateMap() //随机产生地图
 {
     countdown = 60 * 1000;
-    target += 500 * (level + 1);
+    target = 250 * (level + 1) * (level + 2);
     state = WAITING;
     clearGold();
     int i, j, counter[5]; //各种矿产生多少个
@@ -334,8 +334,15 @@ void handler(int key, int event) //用户按“下键”，放下钩子
 void saveGame() // 保存游戏
 {
     FILE *fp = fopen(savefile, "w");
-    fprintf(fp, "%d %d\n", level, countdown);
-    
+    fprintf(fp, "%d %d %d\n", score, level, countdown);
+    linkNode *p = linkGold;
+    while (p != NULL)
+    {
+        gold *cur = p->data;
+        fprintf(fp, "%lf %lf %d\n", cur->x, cur->y, cur->type);
+        p = p->next;
+    }
+    fclose(fp);
 }
 
 void pauseGame() //暂停游戏
@@ -377,7 +384,7 @@ void initButton() //初始化按钮
     buttonWidth = width / 8;
     buttonHeight = 1;
 
-    save = createButton(width / 2, height / 2 + 0.5, buttonWidth, buttonHeight, "保存游戏", &startGame);
+    save = createButton(width / 2, height / 2 + 0.5, buttonWidth, buttonHeight, "保存游戏", &saveGame);
     resume = createButton(width / 2 + 0.8, height / 2 - 0.5, buttonWidth, buttonHeight, "继续游戏", &pauseGame);
     quit = createButton(width / 2 + 1.6, height / 2 - 1.5, buttonWidth, buttonHeight, "退出游戏", &quitGame);
     insButton(save);
@@ -404,10 +411,38 @@ void loadGame() //加载存档
     FILE *fp = fopen(savefile, "r");
     if (fp != NULL)
     {
+        if (!~fscanf(fp, "%d%d%d", &score, &level, &countdown))
+        {
+            initGame();
+            return;
+        }
+
+        if (pause == NULL)
+            initButton();
         
+        target = 250 * (level + 1) * (level + 2);
+        state = WAITING;
+        clearGold();
+
+        double x, y;
+        goldType type;
+        while (~fscanf(fp, "%lf%lf%d", &x, &y, &type))
+        {
+            gold *aGold = malloc(sizeof(gold));
+            aGold->type = type;
+            aGold->x = x;
+            aGold->y = y;
+            linkGold = insNode(linkGold, aGold);
+        }
+
+        refresh();
+        registerKeyboardEvent(&handler);
+        registerTimerEvent(&moniter);
+        startTimer(defaultTimer, refreshInterval);
     }
     else
     {
         initGame();
     }
+    fclose(fp);
 }

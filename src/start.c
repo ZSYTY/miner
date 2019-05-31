@@ -223,7 +223,7 @@ void startGame() //开始游戏
 void resumeGame() //继续游戏
 {
     disableAll();
-    initGame();
+    loadGame();
 }
 
 void quitGame() //退出游戏
