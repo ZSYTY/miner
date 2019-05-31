@@ -108,7 +108,7 @@ linkNode *checkMeet(double x, double y) //检查钩子是否碰到了矿，如果碰到，返回矿
     while (p != NULL)
     {
         cur = p->data;
-        if (x >= cur->x - .8 * cLength && x <= cur->x + width / ratioMap[cur->type] + .8 * cLength && y >= cur->y && y <= cur->y + height / ratioMap[cur->type] + cLength)
+        if (x >= cur->x - .8 * cLength && x <= cur->x + width / ratioMap[cur->type] + cLength && y >= cur->y && y <= cur->y + height / ratioMap[cur->type] + cLength)
             return p; //抓到了
         p = p->next;
     }
@@ -184,7 +184,7 @@ void drawSuccess() //画通关界面
 	DrawHat(width / 2 , height / 2);
     DrawBody(width / 2 , height / 2);
     DrawShovel(width / 2 - 2.2, height / 2 - 1);
-    DrawFace(width / 2 , height / 2);
+    DrawSmile(width / 2 , height / 2);
     SetPenColor("Green");
     SetPenSize(8);
     sprintf(stateText, " 恭喜你顺利过关 ");
@@ -202,7 +202,7 @@ void drawFailure() //画失败界面
     DrawHat(width / 2 , height / 2);
     DrawBody(width / 2 , height / 2);
     DrawShovel(width / 2 - 2.2, height / 2 - 1);
-    DrawFace(width / 2 , height / 2);
+    DrawAngry(width / 2 , height / 2);
     SetPenColor("Red");
     SetPenSize(8);
     sprintf(stateText, " 很遗憾，你没有通关 ");
