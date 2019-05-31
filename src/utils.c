@@ -76,7 +76,7 @@ button *createButton(double x, double y, double width, double height, char text[
     return b;
 }
 
-void drawRoundRectangle(double x, double y, double w, double h) //四个角是圆的的矩形
+void drawRoundRectangle(double x, double y, double w, double h) //四个角是圆的的矩形，画按钮用
 {
     double r = 0.05;
     MovePen(x + r, y);

@@ -7,6 +7,8 @@ double height;
 static button *start = NULL, *resume = NULL, *quit = NULL;
 static linkHead buttonList;
 
+extern score, target, level, countdown;
+
 void insAll() //插入按钮
 {
     insButton(start);
@@ -197,8 +199,21 @@ void startGame() //开始游戏
 
 void resumeGame() //继续游戏
 {
-    disableAll();
-    initGame();
+    FILE *fp;
+    fp = fopen("save.txt", "r");
+    if (fp == NULL)
+    {
+        disableAll();
+        initGame();
+    }
+    // else
+    // {
+    //     disableAll();
+    //     int saveScore, saveTarget, saveLevel, saveCountdown;
+    //     fscanf(fp, "%d%d", &saveScore, &saveTarget, &saveLevel, &saveCountdown);
+    //     score = saveScore, target = saveTarget, level = saveLevel, countdown = saveCountdown;
+    //     refresh();
+    // }
 }
 
 void quitGame() //退出游戏
