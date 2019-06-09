@@ -293,12 +293,14 @@ void runtime() //玩黄金矿工时的动画
         break;
     }
     refresh(); //刷新当前的图
+    SetPenSize(3);
     MovePen(width * .5, height * boardRatio);
     DrawLine(centerX - width * .5, centerY - height * boardRatio);
     SetPenColor("Black");
     MovePen(centerX, centerY);
     DrawLine(cx, cy);
     drawHook(centerX + cx, centerY + cy, theta);
+    SetPenSize(1);
 }
 
 void moniter(int timerID) //根据时间执行
@@ -381,6 +383,7 @@ void returnMenu() // 返回主菜单
     disableButton(save);
     disableButton(resume);
     disableButton(quit);
+    pauseGame();
     initStartPage();
 }
 
@@ -430,7 +433,7 @@ void loadGame() //加载存档
 
         if (pause == NULL)
             initButton();
-        
+
         target = 250 * (level + 1) * (level + 2);
         state = WAITING;
         clearGold();
