@@ -205,52 +205,46 @@ void insButton(button *b) //向按钮链表中插入
     buttonList = insNode(buttonList, b);
 }
 
-void initrank()//创建排行榜文件
+void initrank() //创建排行榜文件
 {
-	FILE *fp = fopen(rankfile, "w");
-	int i;
-	for(i = 1; i <= 5; i++)
-	{
-		fprintf("%d\n",0);
-	}
-	fclose(fp);
- } 
- 
- void ranking(int score)
- {
- 	int scores[5] = {0}, i = 0;
- 	int j, k;//控制循环的变量
-	 
-	FILE *fp = fopen(rankfile, "r");
-	if(fp!=NULL)
-	{
-		while(~fscanf(fp, "%d", scores[i]))
-		i++;
-		
-		for(k = 0;k < 5; k++)
-		{
-			if(scores[k]<=score)
-			{
-				for(j = k;j + 1 < 5; j++)
-				{
-					scores[j + 1] = scores[j];
-				}
-				scores[k] = score;
-			}
-			break;
-		}	
-	}  
-	fclose(fp);
-	
-	fp = fopen(rankfile, "w");
-	for(i = 0;i < 5; i++)
-	{
-		fprintf("%d\n", scores[i]);
-	}
- }
- 
- 
- 
- 
- 
- 
+    FILE *fp = fopen(rankfile, "w");
+    int i;
+    for (i = 1; i <= 5; i++)
+    {
+        fprintf("%d\n", 0);
+    }
+    fclose(fp);
+}
+
+void ranking(int score)
+{
+    int scores[5] = {0}, i = 0;
+    int j, k; //控制循环的变量
+
+    FILE *fp = fopen(rankfile, "r");
+    if (fp != NULL)
+    {
+        while (~fscanf(fp, "%d", scores[i]))
+            i++;
+
+        for (k = 0; k < 5; k++)
+        {
+            if (scores[k] <= score)
+            {
+                for (j = k; j + 1 < 5; j++)
+                {
+                    scores[j + 1] = scores[j];
+                }
+                scores[k] = score;
+            }
+            break;
+        }
+    }
+    fclose(fp);
+
+    fp = fopen(rankfile, "w");
+    for (i = 0; i < 5; i++)
+    {
+        fprintf("%d\n", scores[i]);
+    }
+}

@@ -140,6 +140,7 @@ void displayState() //标明状态
 
 void generateMap() //随机产生地图
 {
+    score = level = 0;
     countdown = 60 * 1000;
     target = 250 * (level + 1) * (level + 2);
     state = WAITING;
@@ -222,7 +223,7 @@ void runtime() //玩黄金矿工时的动画
     {
         cancelTimer(defaultTimer);
         got = NULL;
-        
+
         if (score >= target) //完成目标
         {
             level++;
@@ -231,7 +232,7 @@ void runtime() //玩黄金矿工时的动画
         }
         else //未完成目标
         {
-        	ranking(score);
+            ranking(score);
             level = 0;
             drawFailure();
             startTimer(failureTimer, 5000);
@@ -381,7 +382,7 @@ void saveGame() // 保存游戏
 
 void returnMenu() // 返回主菜单
 {
-	strcpy(pause->text, "暂停");
+    strcpy(pause->text, "暂停");
     disableButton(pause);
     disableButton(save);
     disableButton(resume);
@@ -417,6 +418,7 @@ void initGame() //游戏初始化
     generateMap();
     refresh();
 
+    enableButton(pause);
     registerKeyboardEvent(&handler);
     registerTimerEvent(&moniter);
     startTimer(defaultTimer, refreshInterval);
@@ -430,11 +432,14 @@ void loadGame() //加载存档
         if (!~fscanf(fp, "%d%d%d", &score, &level, &countdown))
         {
             initGame();
+            fclose(fp);
             return;
         }
 
         if (pause == NULL)
             initButton();
+
+        enableButton(pause);
 
         target = 250 * (level + 1) * (level + 2);
         state = WAITING;
@@ -450,8 +455,8 @@ void loadGame() //加载存档
             aGold->y = y;
             linkGold = insNode(linkGold, aGold);
         }
-		
-		enableButton(pause); 
+
+        //enableButton(pause);
         refresh();
         registerKeyboardEvent(&handler);
         registerTimerEvent(&moniter);

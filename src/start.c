@@ -5,7 +5,6 @@
 double width;
 double height;
 static button *start = NULL, *resume = NULL, *quit = NULL, *rank = NULL, *help = NULL;
-static linkHead buttonList;
 
 void insAll() //插入按钮
 {
@@ -30,8 +29,8 @@ void disableAll() //关闭按钮
     disableButton(start);
     disableButton(resume);
     disableButton(quit);
-    disabledButton(rank);
-    disabledButton(help);
+    disableButton(rank);
+    disableButton(help);
 }
 //画开始界面的矿工、矿车等
 void D(double x, double y)
@@ -216,7 +215,7 @@ void initStartPage() //初始化开始界面
         resume = createButton(width / 2 + 0.8, height / 2 + 1, buttonWidth, buttonHeight, "继续游戏", &resumeGame);
         quit = createButton(width / 2 + 1.6, height / 2, buttonWidth, buttonHeight, "退出游戏", &quitGame);
         rank = createButton(width / 2 + 0.8, height / 2 - 1, buttonWidth, buttonHeight, "退出游戏", &checkrank);
-        //help = createButton(width / 2, height / 2 - 2, buttonWidth, buttonHeight, "退出游戏", //&quitGame);
+        help = createButton(width / 2, height / 2 - 2, buttonWidth, buttonHeight, "退出游戏", &quitGame);
         registerMouseEvent(buttonCallBack);
         insAll();
     }
