@@ -23,6 +23,7 @@ void drawVector(double r, double theta);
 void clearScreen();
 
 #define MAX_TEXT_LENGTH 80
+#define rankfile "rankfile.txt" 
 
 typedef void (*buttonClickCallBack)(void);
 
@@ -52,5 +53,8 @@ linkHead delNode(linkHead head, linkNode *node);
 linkNode *newNode();
 void buttonCallBack(int x, int y, int button, int event);
 void insButton(button *b);
+
+void initrank();
+void ranking(int score);
 
 #endif

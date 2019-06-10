@@ -4,7 +4,7 @@
 
 double width;
 double height;
-static button *start = NULL, *resume = NULL, *quit = NULL;
+static button *start = NULL, *resume = NULL, *quit = NULL, *rank = NULL, *help = NULL;
 static linkHead buttonList;
 
 void insAll() //插入按钮
@@ -12,6 +12,8 @@ void insAll() //插入按钮
     insButton(start);
     insButton(resume);
     insButton(quit);
+    insButton(rank);
+    insButton(help);
 }
 
 void enableAll() //开启按钮
@@ -19,6 +21,8 @@ void enableAll() //开启按钮
     enableButton(start);
     enableButton(resume);
     enableButton(quit);
+    enableButton(rank);
+    enableButton(help);
 }
 
 void disableAll() //关闭按钮
@@ -26,6 +30,8 @@ void disableAll() //关闭按钮
     disableButton(start);
     disableButton(resume);
     disableButton(quit);
+    disabledButton(rank);
+    disabledButton(help);
 }
 //画开始界面的矿工、矿车等
 void D(double x, double y)
@@ -187,9 +193,11 @@ void drawStartPage(double width, double height) //开始界面
     DrawBody(width / 2 - 1.5, height / 2);
     DrawShovel(width / 2 - 3.7, height / 2 - 1);
     DrawFace(width / 2 - 1.5, height / 2);
-    MineCar(width / 2, height / 2 + 0.5, "开始游戏");
-    MineCar(width / 2 + 0.8, height / 2 - 0.5, "继续游戏");
-    MineCar(width / 2 + 1.6, height / 2 - 1.5, "退出游戏");
+    MineCar(width / 2, height / 2 + 2, "开始游戏");
+    MineCar(width / 2 + 0.8, height / 2 + 1, "继续游戏");
+    MineCar(width / 2 + 1.6, height / 2, "退出游戏");
+    MineCar(width / 2 + 0.8, height / 2 - 1, "排行榜" );
+    MineCar(width / 2, height / 2 - 2, "帮助");
 }
 
 void initStartPage() //初始化开始界面
@@ -204,9 +212,11 @@ void initStartPage() //初始化开始界面
 
     if (start == NULL)
     {
-        start = createButton(width / 2, height / 2 + 0.5, buttonWidth, buttonHeight, "开始游戏", &startGame);
-        resume = createButton(width / 2 + 0.8, height / 2 - 0.5, buttonWidth, buttonHeight, "继续游戏", &resumeGame);
-        quit = createButton(width / 2 + 1.6, height / 2 - 1.5, buttonWidth, buttonHeight, "退出游戏", &quitGame);
+        start = createButton(width / 2, height / 2 + 2, buttonWidth, buttonHeight, "开始游戏", &startGame);
+        resume = createButton(width / 2 + 0.8, height / 2 + 1, buttonWidth, buttonHeight, "继续游戏", &resumeGame);
+        quit = createButton(width / 2 + 1.6, height / 2, buttonWidth, buttonHeight, "退出游戏", &quitGame);
+        rank = createButton(width / 2 + 0.8, height / 2 - 1, buttonWidth, buttonHeight, "退出游戏", &checkrank);
+        //help = createButton(width / 2, height / 2 - 2, buttonWidth, buttonHeight, "退出游戏", //&quitGame);
         registerMouseEvent(buttonCallBack);
         insAll();
     }
@@ -230,3 +240,17 @@ void quitGame() //退出游戏
 {
     ExitGraphics();
 }
+void checkrank()
+{
+	FILE *fp = fopen(rankfile, "r");
+	int scores[5], i = 0;
+	char a[10];//测试用 
+	while(~fscanf(fp, "%d", &scores[i]))
+	i++;
+	sprintf(a,"awsl%d",i);
+	MovePen(width/2.0, height/2.0);
+	DrawTextString(a);
+	//printrank;
+}
+
+

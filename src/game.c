@@ -222,6 +222,7 @@ void runtime() //玩黄金矿工时的动画
     {
         cancelTimer(defaultTimer);
         got = NULL;
+        
         if (score >= target) //完成目标
         {
             level++;
@@ -230,6 +231,7 @@ void runtime() //玩黄金矿工时的动画
         }
         else //未完成目标
         {
+        	ranking(score);
             level = 0;
             drawFailure();
             startTimer(failureTimer, 5000);
@@ -379,11 +381,11 @@ void saveGame() // 保存游戏
 
 void returnMenu() // 返回主菜单
 {
+	strcpy(pause->text, "暂停");
     disableButton(pause);
     disableButton(save);
     disableButton(resume);
     disableButton(quit);
-    pauseGame();
     initStartPage();
 }
 
@@ -448,7 +450,8 @@ void loadGame() //加载存档
             aGold->y = y;
             linkGold = insNode(linkGold, aGold);
         }
-
+		
+		enableButton(pause); 
         refresh();
         registerKeyboardEvent(&handler);
         registerTimerEvent(&moniter);

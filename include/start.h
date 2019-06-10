@@ -9,5 +9,6 @@ void initStartPage();
 void startGame();
 void resumeGame();
 void quitGame();
+void checkrank();
 
 #endif
