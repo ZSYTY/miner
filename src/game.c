@@ -140,7 +140,6 @@ void displayState() //标明状态
 
 void generateMap() //随机产生地图
 {
-    score = level = 0;
     countdown = 60 * 1000;
     target = 250 * (level + 1) * (level + 2);
     state = WAITING;
@@ -187,7 +186,7 @@ void drawSuccess() //画通关界面
     DrawShovel(width / 2 - 2.2, height / 2 - 1);
     DrawSmile(width / 2, height / 2);
     SetPenColor("SpringGreen3");
-    sprintf(stateText, " 恭喜你顺利过关 ");
+    sprintf(stateText, " 恭喜你通过本关，即将进入下一关 ");
     MovePen(width / 2 + 0.5, height / 2 + 0.5);
     DrawTextString(stateText);
     SetPenSize(1);
@@ -456,7 +455,6 @@ void loadGame() //加载存档
             linkGold = insNode(linkGold, aGold);
         }
 
-        //enableButton(pause);
         refresh();
         registerKeyboardEvent(&handler);
         registerTimerEvent(&moniter);
@@ -467,4 +465,10 @@ void loadGame() //加载存档
         initGame();
     }
     fclose(fp);
+}
+
+void newGame() // 重新开始游戏
+{
+    level = score = 0;
+    initGame();
 }

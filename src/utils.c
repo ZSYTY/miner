@@ -24,6 +24,8 @@ void initColor() //自定义颜色
     addColor("Ivory", 255, 255, 240);
     addColor("Silver", 192, 192, 192);
     addColor("Cobalt", 61, 89, 171);
+    SetFont("微软雅黑");
+    SetPointSize(16);
 }
 
 void drawDiamond(double x, double y, double width, double height)
@@ -118,10 +120,14 @@ void drawRoundRectangle(double x, double y, double w, double h) //四个角是圆的的
 
 void drawButton(button *b) //画按钮
 {
-    SetPenColor("Gray21");
+    SetPenColor("Blue");
+    StartFilledRegion(1);
     drawRoundRectangle(b->x, b->y, b->width, b->height);
+    EndFilledRegion();
     MovePen(b->x + b->width / 2 - TextStringWidth(b->text) / 2, b->y + b->height / 2 - 0.05);
+    SetPenColor("White");
     DrawTextString(b->text);
+    SetPenColor("Gray21");
 }
 
 void enableButton(button *b) //开启按钮
@@ -216,7 +222,7 @@ void initrank() //创建排行榜文件
     fclose(fp);
 }
 
-void ranking(int score)
+void ranking(int score) // 增加成绩记录
 {
     int scores[5] = {0}, i = 0;
     int j, k; //控制循环的变量
@@ -224,10 +230,10 @@ void ranking(int score)
     FILE *fp = fopen(rankfile, "r");
     if (fp != NULL)
     {
-        while (~fscanf(fp, "%d", scores[i]))
+        while (~fscanf(fp, "%d", &scores[i]))
             i++;
 
-        for (k = 0; k < 5; k++)
+        for (k = 0; k < 5 && k < i; k++)
         {
             if (scores[k] <= score)
             {
@@ -236,15 +242,16 @@ void ranking(int score)
                     scores[j + 1] = scores[j];
                 }
                 scores[k] = score;
+                break;
             }
-            break;
         }
     }
     fclose(fp);
 
     fp = fopen(rankfile, "w");
-    for (i = 0; i < 5; i++)
+    for (j = 0; j < 5 && j <= i; j++)
     {
-        fprintf("%d\n", scores[i]);
+        fprintf(fp, "%d\n", scores[j]);
     }
+    fclose(fp);
 }

@@ -4,7 +4,7 @@
 
 double width;
 double height;
-static button *start = NULL, *resume = NULL, *quit = NULL, *rank = NULL, *help = NULL;
+static button *start = NULL, *resume = NULL, *quit = NULL, *rank = NULL, *help = NULL, *back = NULL;
 
 void insAll() //插入按钮
 {
@@ -13,6 +13,7 @@ void insAll() //插入按钮
     insButton(quit);
     insButton(rank);
     insButton(help);
+    insButton(back);
 }
 
 void enableAll() //开启按钮
@@ -195,8 +196,50 @@ void drawStartPage(double width, double height) //开始界面
     MineCar(width / 2, height / 2 + 2, "开始游戏");
     MineCar(width / 2 + 0.8, height / 2 + 1, "继续游戏");
     MineCar(width / 2 + 1.6, height / 2, "退出游戏");
-    MineCar(width / 2 + 0.8, height / 2 - 1, "排行榜" );
+    MineCar(width / 2 + 0.8, height / 2 - 1, "排行榜");
     MineCar(width / 2, height / 2 - 2, "帮助");
+}
+
+void closeModal() // 关闭模态框
+{
+    enableAll();
+    disableButton(back);
+    initStartPage();
+}
+
+void openModal() // 打开模态框
+{
+    double modalWidth = width / 4, modalHeight = height / 2;
+    disableAll();
+    enableButton(back);
+    SetPenColor("LightCyan");
+    StartFilledRegion(1);
+    drawRoundRectangle(width / 2 - modalWidth / 2, height / 2 - modalHeight / 2, modalWidth, modalHeight);
+    EndFilledRegion();
+    drawButton(back);
+}
+
+void intro() // 绘制说明
+{
+    openModal();
+    double ox = width * 3 / 8 + 0.2, oy = height * 3 / 4 - 0.5, lineHeight = 0.4;
+    SetPointSize(12);
+    MovePen(ox, oy);
+    DrawTextString("游戏说明：");
+    oy -= lineHeight;
+    MovePen(ox, oy);
+    DrawTextString("按下键↓来放钩子来捞取矿石。");
+    oy -= lineHeight;
+    MovePen(ox, oy);
+    DrawTextString("没有必要按上键↑因为你没有炸药。");
+    oy -= lineHeight;
+    MovePen(ox, oy);
+    DrawTextString("目标分数将会以二次函数形式递增");
+    oy -= lineHeight;
+    MovePen(ox, oy);
+    DrawTextString("进入游戏，看看你能撑几轮吧！");
+    oy -= lineHeight;
+    SetPointSize(16);
 }
 
 void initStartPage() //初始化开始界面
@@ -208,14 +251,19 @@ void initStartPage() //初始化开始界面
 
     double buttonWidth = width / 8;
     double buttonHeight = 1;
+    double delta = 0.05;
 
     if (start == NULL)
     {
         start = createButton(width / 2, height / 2 + 2, buttonWidth, buttonHeight, "开始游戏", &startGame);
         resume = createButton(width / 2 + 0.8, height / 2 + 1, buttonWidth, buttonHeight, "继续游戏", &resumeGame);
         quit = createButton(width / 2 + 1.6, height / 2, buttonWidth, buttonHeight, "退出游戏", &quitGame);
-        rank = createButton(width / 2 + 0.8, height / 2 - 1, buttonWidth, buttonHeight, "退出游戏", &checkrank);
-        help = createButton(width / 2, height / 2 - 2, buttonWidth, buttonHeight, "退出游戏", &quitGame);
+        rank = createButton(width / 2 + 0.8, height / 2 - 1, buttonWidth, buttonHeight, "排行榜", &displayRank);
+        help = createButton(width / 2, height / 2 - 2, buttonWidth, buttonHeight, "帮助", &intro);
+
+        buttonWidth = 0.6, buttonHeight = 0.3, delta = 0.05;
+        back = createButton(width * 5 / 8 - buttonWidth - delta, height / 4 + delta, buttonWidth, buttonHeight, "返回", &closeModal);
+
         registerMouseEvent(buttonCallBack);
         insAll();
     }
@@ -226,7 +274,7 @@ void initStartPage() //初始化开始界面
 void startGame() //开始游戏
 {
     disableAll();
-    initGame();
+    newGame();
 }
 
 void resumeGame() //继续游戏
@@ -239,17 +287,25 @@ void quitGame() //退出游戏
 {
     ExitGraphics();
 }
-void checkrank()
+
+void displayRank() // 显示排名
 {
-	FILE *fp = fopen(rankfile, "r");
-	int scores[5], i = 0;
-	char a[10];//测试用 
-	while(~fscanf(fp, "%d", &scores[i]))
-	i++;
-	sprintf(a,"awsl%d",i);
-	MovePen(width/2.0, height/2.0);
-	DrawTextString(a);
-	//printrank;
+    openModal();
+    FILE *fp = fopen(rankfile, "r");
+    int scores[5], i = 0, j;
+    char buffer[MAX_TEXT_LENGTH];
+    while (~fscanf(fp, "%d", &scores[i]))
+        i++;
+    double ox = width * 3 / 8 + 0.2, oy = height * 3 / 4 - 0.5, lineHeight = 0.4;
+    MovePen(ox, oy);
+    DrawTextString("排名              分数");
+    for (j = 0; j < i; j++)
+    {
+        oy -= lineHeight;
+        MovePen(ox, oy);
+        sprintf(buffer, "%-18d%-18d", j + 1, scores[j]);
+        DrawTextString(buffer);
+    }
+    fclose(fp);
+    //printrank;
 }
-
-

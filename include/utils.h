@@ -13,6 +13,9 @@
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #endif
 
+#define savefile "savefile.txt"
+#define rankfile "rankfile.txt"
+
 void initColor();
 
 void drawRectangle(double x, double y, double width, double height);
@@ -23,7 +26,6 @@ void drawVector(double r, double theta);
 void clearScreen();
 
 #define MAX_TEXT_LENGTH 80
-#define rankfile "rankfile.txt" 
 
 typedef void (*buttonClickCallBack)(void);
 
