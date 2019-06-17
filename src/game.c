@@ -157,6 +157,7 @@ void generateMap() //随机产生地图
 
 void refresh() //刷新界面
 {
+    DisplayClear();
     clearScreen();
     displayBoard();
     drawGold();
@@ -204,7 +205,7 @@ void drawFailure() //画失败界面
     DrawAngry(width / 2, height / 2);
     SetPenColor("Red");
     SetPenSize(8);
-    sprintf(stateText, " 很遗憾，你没有通关 ");
+    sprintf(stateText, " 很遗憾，你没有通关 \n 本次分数：%d分\n", score);
     MovePen(width / 2 + 0.5, height / 2 + 0.5);
     DrawTextString(stateText);
     SetPenSize(1);

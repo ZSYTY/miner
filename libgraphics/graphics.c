@@ -49,7 +49,7 @@
 #define DesiredWidth       10.0
 #define DesiredHeight      7.0
 #define DefaultSize       12
-#define MaxTitle          75
+#define MaxTitle          256
 #define MaxFontName       50
 #define MaxFonts         100
 #define LeftMargin        0/*10*/
@@ -268,7 +268,7 @@ static LONG FAR PASCAL GraphicsEventProc(HWND w, UINT msg,
                                          WPARAM p1, LPARAM p2);
 static void CheckEvents(void);
 static void DoUpdate(void);
-static void DisplayClear(void);
+void DisplayClear(void);
 static void PrepareToDraw(void);
 static void DisplayLine(double x, double y, double dx, double dy);
 static void DisplayArc(double xc, double yc, double rx, double ry,
@@ -818,6 +818,7 @@ void repaint()
 
 static void InitDisplay(void)
 {
+    WNDCLASS wndcls;
     RECT bounds, consoleRect, graphicsRect;
     double screenHeight, screenWidth, xSpace, ySpace;
     double xScale, yScale, scaleFactor;
@@ -856,7 +857,6 @@ static void InitDisplay(void)
 	g_mouse = NULL;
 	g_timer = NULL;
     
-    WNDCLASS wndcls;
     wndcls.cbClsExtra = 0;
     wndcls.cbWndExtra = 0;
     wndcls.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
@@ -1072,10 +1072,16 @@ static LONG FAR PASCAL GraphicsEventProc(HWND hwnd, UINT msg,
 {
     switch(msg)
     {
+		// 刘新国：使用了double buffer, 手动清屏，
+		//         无需系统擦除背景，避免闪烁
+		//         感谢18级石蒙同学，提供这个方法解决刷新闪烁问题
+		case WM_ERASEBKGND: 
+			return 0; 
+
         case WM_PAINT:
              DoUpdate();
              return 0;
-             
+
         case WM_CHAR:
     		if (g_char != NULL)
     			g_char((char) wParam);
@@ -1157,6 +1163,7 @@ static LONG FAR PASCAL GraphicsEventProc(HWND hwnd, UINT msg,
         case WM_DESTROY:
             PostQuitMessage(0);
             return 0;   
+
         default:
             return DefWindowProc(hwnd, msg, wParam, lParam);
     }                                     
@@ -1226,13 +1233,13 @@ static void DoUpdate(void)
  * This function clears all the bits in the offscreen bitmap.
  */
 
-static void DisplayClear(void)
+void DisplayClear(void)
 {
     RECT r;
 
     SetRect(&r, 0, 0, pixelWidth, pixelHeight);
     InvalidateRect(graphicsWindow, &r, TRUE);
-    BitBlt(osdc, 0, 0, pixelWidth, pixelHeight, osdc, 0, 0, WHITENESS);
+    BitBlt(osdc, 0, 0, pixelWidth, pixelHeight, NULL, 0, 0, WHITENESS);
 }
 
 /*

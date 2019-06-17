@@ -54,6 +54,8 @@
 
 void InitGraphics(void);
 
+void DisplayClear();
+
 void InitConsole(void);
 
 /*
@@ -139,8 +141,6 @@ double GetWindowHeight(void);
 
 double GetCurrentX(void);
 double GetCurrentY(void);
-
-void Main();
 
 typedef enum
 {
