@@ -15,6 +15,7 @@
 
 #define savefile "savefile.txt"
 #define rankfile "rankfile.txt"
+#define MAX_RANK_NUM 5
 
 void initColor();
 

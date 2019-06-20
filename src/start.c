@@ -4,9 +4,15 @@
 
 double width;
 double height;
-static button *start = NULL, *resume = NULL, *quit = NULL, *rank = NULL, *help = NULL, *back = NULL;
+static button *start = NULL;
+static button *resume = NULL;
+static button *quit = NULL;
+static button *rank = NULL;
+static button *help = NULL;
+static button *back = NULL;
 
-void insAll() //插入按钮
+//插入按钮
+void insAll() 
 {
     insButton(start);
     insButton(resume);
@@ -16,7 +22,8 @@ void insAll() //插入按钮
     insButton(back);
 }
 
-void enableAll() //开启按钮
+//开启按钮
+void enableAll() 
 {
     enableButton(start);
     enableButton(resume);
@@ -25,7 +32,8 @@ void enableAll() //开启按钮
     enableButton(help);
 }
 
-void disableAll() //关闭按钮
+//关闭按钮
+void disableAll() 
 {
     disableButton(start);
     disableButton(resume);
@@ -33,6 +41,7 @@ void disableAll() //关闭按钮
     disableButton(rank);
     disableButton(help);
 }
+
 //画开始界面的矿工、矿车等
 void D(double x, double y)
 {
@@ -58,12 +67,14 @@ void O(double x, double y)
     StartFilledRegion(1);
     DrawArc(0.5, 0, 360);
     EndFilledRegion();
-    SetPenColor("White");
+    
+	SetPenColor("White");
     MovePen(x + 0.2, y - 0.1);
     StartFilledRegion(1);
     DrawArc(0.4, 0, 360);
     EndFilledRegion();
-    MovePen(x, y - 0.06);
+    
+	MovePen(x, y - 0.06);
     SetPenColor("Black");
     StartFilledRegion(1);
     DrawArc(0.2, 0, 360);
@@ -102,7 +113,8 @@ void DrawAngry(double x, double y)
     SetPenColor("Gray");
     drawFilledRect(x, y - 0.55, 0.3, 0.2);
     drawFilledRect(x + 0.2, y - 0.35, 0.2, -1.2);
-    MovePen(x - 0.6, y - 0.8);
+    
+	MovePen(x - 0.6, y - 0.8);
     SetPenColor("Red");
     StartFilledRegion(1);
     DrawArc(0.4, 0, 180);
@@ -117,14 +129,17 @@ void DrawHat(double x, double y)
     StartFilledRegion(1);
     DrawArc(1.1, 0, 180);
     EndFilledRegion();
-    SetPenColor("Brown");
+    
+	SetPenColor("Brown");
     drawFilledRect(x, y + 1.1, -2.2, -0.1);
-    MovePen(x - 0.8, y + 1.6);
+    
+	MovePen(x - 0.8, y + 1.6);
     SetPenColor("Light Gray");
     StartFilledRegion(1);
     DrawArc(0.2, 0, 360);
     EndFilledRegion();
-    MovePen(x - 0.9, y + 1.6);
+    
+	MovePen(x - 0.9, y + 1.6);
     SetPenColor("Yellow");
     StartFilledRegion(1);
     DrawArc(0.1, 0, 360);
@@ -135,12 +150,14 @@ void DrawBody(double x, double y)
 {
     SetPenColor("Yellow");
     drawFilledRect(x - 2.2, y - 1.1, 2.2, 2.2);
-    SetPenColor("Blue");
+    
+	SetPenColor("Blue");
     MovePen(x - 2.2, y - 1.1);
     StartFilledRegion(1);
     DrawArc(-1.1, 0, 180);
     EndFilledRegion();
-    SetPenColor("SpringGreen3");
+    
+	SetPenColor("SpringGreen3");
     drawFilledRect(x - 2.2, y - 1.1, 2.2, -0.1);
     drawFilledRect(x - 1.1, y - 1.25, 0.6, -0.4);
 }
@@ -150,7 +167,8 @@ void DrawShovel(double x, double y)
     SetPenColor("Brown");
     drawFilledRect(x - 0.4, y - 0.1, 0.75, 0.2);
     drawFilledRect(x, y - 0.1, 0.15, 1.2);
-    SetPenColor("Light Gray");
+    
+	SetPenColor("Light Gray");
     drawFilledRect(x - 0.2, y + 1.1, 0.5, 0.5);
     MovePen(x - 0.2, y + 1.6);
     StartFilledRegion(1);
@@ -164,15 +182,18 @@ void MineCar(double x, double y, char *b)
     drawFilledRect(x - 0.75, y, 2.25, 0.15);
     drawFilledRect(x - 0.6, y, 1.95, -0.45);
     MovePen(x - 0.15, y - 0.45);
-    SetPenColor("Dark Gray");
+    
+	SetPenColor("Dark Gray");
     StartFilledRegion(1);
     DrawArc(0.15, 0, 360);
     EndFilledRegion();
-    MovePen(x + 1.2, y - 0.45);
+    
+	MovePen(x + 1.2, y - 0.45);
     StartFilledRegion(1);
     DrawArc(0.15, 0, 360);
     EndFilledRegion();
-    SetPenColor("Gold1");
+    
+	SetPenColor("Gold1");
     drawFilledRect(x - 0.57, y + 0.15, 1.8, 0.4);
     drawFilledRect(x + 1.2, y + 0.15, 0.1, 0.6);
     drawFilledRect(x, y + 0.55, 0.6, 0.3);
@@ -180,7 +201,8 @@ void MineCar(double x, double y, char *b)
     drawFilledRect(x + 0.8, y + 0.55, 0.2, 0.24);
     drawFilledRect(x + 0.8, y + 0.55, -0.1, 0.36);
     drawFilledRect(x + 0.8, y + 0.55, -0.2, 0.48);
-    MovePen(x + 0.1, y + 0.4);
+    
+	MovePen(x + 0.1, y + 0.4);
     SetPenColor("Red");
     DrawTextString(b);
 }
@@ -189,11 +211,13 @@ void drawStartPage(double width, double height) //开始界面
 {
     SetPenColor("Azure");
     drawFilledRect(width, height, -width, -height);
-    DrawHat(width / 2 - 1.5, height / 2);
+    
+	DrawHat(width / 2 - 1.5, height / 2);
     DrawBody(width / 2 - 1.5, height / 2);
     DrawShovel(width / 2 - 3.7, height / 2 - 1);
     DrawFace(width / 2 - 1.5, height / 2);
-    MineCar(width / 2, height / 2 + 2, "开始游戏");
+    
+	MineCar(width / 2, height / 2 + 2, "开始游戏");
     MineCar(width / 2 + 0.8, height / 2 + 1, "继续游戏");
     MineCar(width / 2 + 1.6, height / 2, "退出游戏");
     MineCar(width / 2 + 0.8, height / 2 - 1, "排行榜");
@@ -224,19 +248,24 @@ void intro() // 绘制说明
     openModal();
     double ox = width * 3 / 8 + 0.2, oy = height * 3 / 4 - 0.5, lineHeight = 0.4;
     SetPointSize(12);
-    MovePen(ox, oy);
+    
+	MovePen(ox, oy);
     DrawTextString("游戏说明：");
     oy -= lineHeight;
-    MovePen(ox, oy);
+    
+	MovePen(ox, oy);
     DrawTextString("按下键↓来放钩子来捞取矿石。");
     oy -= lineHeight;
-    MovePen(ox, oy);
+    
+	MovePen(ox, oy);
     DrawTextString("没有必要按上键↑因为你没有炸药。");
     oy -= lineHeight;
-    MovePen(ox, oy);
+    
+	MovePen(ox, oy);
     DrawTextString("目标分数将会以二次函数形式递增");
     oy -= lineHeight;
-    MovePen(ox, oy);
+    
+	MovePen(ox, oy);
     DrawTextString("进入游戏，看看你能撑几轮吧！");
     oy -= lineHeight;
     SetPointSize(16);
@@ -291,21 +320,24 @@ void quitGame() //退出游戏
 void displayRank() // 显示排名
 {
     openModal();
-    FILE *fp = fopen(rankfile, "r");
-    int scores[5], i = 0, j;
+    
+	FILE *fp = fopen(rankfile, "r");
+    int scores[MAX_RANK_NUM], i = 0, j;
     char buffer[MAX_TEXT_LENGTH];
     while (~fscanf(fp, "%d", &scores[i]))
         i++;
-    double ox = width * 3 / 8 + 0.2, oy = height * 3 / 4 - 0.5, lineHeight = 0.4;
+    
+	double ox = width * 3 / 8 + 0.2, oy = height * 3 / 4 - 0.5, lineHeight = 0.4;
     MovePen(ox, oy);
     DrawTextString("排名              分数");
-    for (j = 0; j < i; j++)
+    
+	for (j = 0; j < i; j++)
     {
         oy -= lineHeight;
         MovePen(ox, oy);
         sprintf(buffer, "%-18d%-18d", j + 1, scores[j]);
         DrawTextString(buffer);
     }
-    fclose(fp);
-    //printrank;
+    
+	fclose(fp);
 }

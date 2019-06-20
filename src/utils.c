@@ -3,12 +3,14 @@
 #include <math.h>
 #include <string.h>
 
-void addColor(string name, int r, int g, int b) //添加颜色
+//添加颜色
+void addColor(string name, int r, int g, int b) 
 {
     DefineColor(name, 1.0 * r / 255, 1.0 * g / 255, 1.0 * b / 255);
 }
 
-void initColor() //自定义颜色
+//自定义颜色
+void initColor() 
 {
     addColor("Azure", 240, 255, 255);
     addColor("Gold1", 255, 215, 0);
@@ -41,7 +43,8 @@ void drawDiamond(double x, double y, double width, double height)
     EndFilledRegion();
 }
 
-void drawFilledIrregular(double x, double y, double width, double height) //画不规则石头或者金块
+//画不规则石头或者金块
+void drawFilledIrregular(double x, double y, double width, double height) 
 {
     drawFilledRect(x, y, width, height);
     drawFilledRect(x + width, y, width * 0.1, width / 4);
@@ -52,7 +55,8 @@ void drawFilledIrregular(double x, double y, double width, double height) //画不
     drawFilledRect(x + width, y, -width, -height * 0.1);
 }
 
-void drawRectangle(double x, double y, double width, double height) //画矩形
+//画矩形
+void drawRectangle(double x, double y, double width, double height) 
 {
     MovePen(x, y);
     DrawLine(width, 0);
@@ -61,25 +65,29 @@ void drawRectangle(double x, double y, double width, double height) //画矩形
     DrawLine(0, -height);
 }
 
-void drawFilledRect(double x, double y, double width, double height) //在矩形中填充颜色
+//在矩形中填充颜色
+void drawFilledRect(double x, double y, double width, double height) 
 {
     StartFilledRegion(1);
     drawRectangle(x, y, width, height);
     EndFilledRegion();
 }
 
-void drawCircle(double x, double y, double r) //画圆
+//画圆
+void drawCircle(double x, double y, double r) 
 {
     MovePen(x + r, y);
     DrawArc(r, 0, 360);
 }
 
-void drawVector(double r, double theta) //画向量
+//画向量
+void drawVector(double r, double theta) 
 {
     DrawLine(r * cos(theta), r * sin(theta));
 }
 
-void clearScreen() //清屏幕
+//清屏幕
+void clearScreen() 
 {
     string preColor = GetPenColor();
     SetPenColor("Azure");
@@ -91,7 +99,10 @@ void clearScreen() //清屏幕
     SetPenColor(preColor);
 }
 
-button *createButton(double x, double y, double width, double height, char text[], buttonClickCallBack cb) //画按钮
+//画按钮
+button *createButton(double x, double y, 
+					double width, double height, char text[], 
+					buttonClickCallBack cb) 
 {
     button *b = malloc(sizeof(button));
     b->x = x;
@@ -104,7 +115,8 @@ button *createButton(double x, double y, double width, double height, char text[
     return b;
 }
 
-void drawRoundRectangle(double x, double y, double w, double h) //四个角是圆的的矩形
+//四个角是圆的的矩形
+void drawRoundRectangle(double x, double y, double w, double h) 
 {
     double r = 0.05;
     MovePen(x + r, y);
@@ -118,24 +130,28 @@ void drawRoundRectangle(double x, double y, double w, double h) //四个角是圆的的
     DrawArc(r, 180, 90);
 }
 
-void drawButton(button *b) //画按钮
+//画按钮
+void drawButton(button *b) 
 {
     SetPenColor("Blue");
     StartFilledRegion(1);
     drawRoundRectangle(b->x, b->y, b->width, b->height);
     EndFilledRegion();
     MovePen(b->x + b->width / 2 - TextStringWidth(b->text) / 2, b->y + b->height / 2 - 0.05);
-    SetPenColor("White");
+    
+	SetPenColor("White");
     DrawTextString(b->text);
     SetPenColor("Gray21");
 }
 
-void enableButton(button *b) //开启按钮
+//开启按钮
+void enableButton(button *b) 
 {
     b->disabled = FALSE;
 }
 
-void disableButton(button *b) //关闭按钮
+//关闭按钮
+void disableButton(button *b) 
 {
     b->disabled = TRUE;
 }
@@ -146,19 +162,22 @@ bool isIn(button *b, int xi, int yi)
     return x >= b->x && x <= b->x + b->width && y >= b->y && y <= b->y + b->height;
 }
 
-linkHead insNode(linkHead head, void *data) //将数据插入链表
+//将数据插入链表
+linkHead insNode(linkHead head, void *data) 
 {
     linkNode *newHead = newNode();
     newHead->data = data;
     newHead->next = head;
-    if (head != NULL)
+    
+	if (head != NULL)
     {
         head->pre = newHead;
     }
     return newHead;
 }
 
-linkHead delNode(linkHead head, linkNode *node) //将节点从链表中删除
+//将节点从链表中删除
+linkHead delNode(linkHead head, linkNode *node) 
 {
     if (node->pre != NULL)
     {
@@ -178,7 +197,8 @@ linkHead delNode(linkHead head, linkNode *node) //将节点从链表中删除
     return head;
 }
 
-linkNode *newNode() //新建链表
+//新建链表
+linkNode *newNode() 
 {
     linkNode *head = (linkNode *)malloc(sizeof(linkNode));
     head->pre = head->next = NULL;
@@ -187,14 +207,17 @@ linkNode *newNode() //新建链表
 
 linkHead buttonList; //按钮的链表
 
-void buttonCallBack(int x, int y, int bt, int event) //按钮反应
+//按钮反应
+void buttonCallBack(int x, int y, int bt, int event) 
 {
     if (bt != LEFT_BUTTON || event != BUTTON_DOWN)
     {
         return;
     }
     linkNode *p = buttonList;
-    while (p != NULL) //遍历按钮的链表，检测是否点到了
+    
+    //遍历按钮的链表，检测是否点到了
+	while (p != NULL) 
     {
         button *currentButton = p->data;
         if (!currentButton->disabled && isIn(p->data, x, y))
@@ -206,50 +229,57 @@ void buttonCallBack(int x, int y, int bt, int event) //按钮反应
     }
 }
 
-void insButton(button *b) //向按钮链表中插入
+//向按钮链表中插入
+void insButton(button *b) 
 {
     buttonList = insNode(buttonList, b);
 }
 
-void initrank() //创建排行榜文件
+//创建排行榜文件
+void initrank() 
 {
     FILE *fp = fopen(rankfile, "w");
-    int i;
+    
+	int i;
     for (i = 1; i <= 5; i++)
     {
         fprintf("%d\n", 0);
     }
-    fclose(fp);
+    
+	fclose(fp);
 }
 
-void ranking(int score) // 增加成绩记录
+//增加成绩记录
+void ranking(int score) 
 {
-    int scores[5] = {0}, i = 0;
-    int j, k; //控制循环的变量
+    int scores[MAX_RANK_NUM + 1] = {0}, i = 0;
+    int j, k;
 
     FILE *fp = fopen(rankfile, "r");
     if (fp != NULL)
     {
         while (~fscanf(fp, "%d", &scores[i]))
-            i++;
+    	{
+    		i++;
+		}
 
-        for (k = 0; k < 5 && k < i; k++)
-        {
-            if (scores[k] <= score)
-            {
-                for (j = k; j + 1 < 5; j++)
-                {
-                    scores[j + 1] = scores[j];
-                }
-                scores[k] = score;
-                break;
-            }
-        }
+		for (j = i; j > 0; j--)
+		{
+			if (score > scores[j - 1])
+			{
+				scores[j] = scores[j - 1];
+			}
+			else
+			{
+				break;
+			}
+		}
+		scores[j] = score;
     }
     fclose(fp);
 
     fp = fopen(rankfile, "w");
-    for (j = 0; j < 5 && j <= i; j++)
+    for (j = 0; j < MAX_RANK_NUM && j <= i; j++)
     {
         fprintf(fp, "%d\n", scores[j]);
     }
