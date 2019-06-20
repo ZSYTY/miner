@@ -18,6 +18,7 @@ enum
 
 static int score, target, level, countdown; //分数，目标分数，等级，时间倒数
 static int state;
+static int lastScore;
 static linkHead linkGold;    //存储矿的链表
 
 extern double width, height; //屏的宽和高
@@ -27,6 +28,7 @@ extern double width, height; //屏的宽和高
 #define defaultTimer 1
 #define successTimer 2
 #define failureTimer 3
+#define scoreTimer 4
 #define pi 3.14159265     //圆周率
 #define originSpeed 0.075 //钩子初始速度
 #define cLength 0.15      //钩子的尺寸参数
@@ -147,6 +149,7 @@ void displayBoard()
     DrawArc(r, 0, 180);
 }
 
+static double newScoreX, newScoreY;
 //标明状态
 void displayState() 
 {
@@ -156,6 +159,14 @@ void displayState()
 
     MovePen(0, height * 5 / 6);
     DrawTextString(stateText);
+
+    if (lastScore)
+    {
+        sprintf(stateText, "+%d", lastScore);
+        MovePen(newScoreX, newScoreY);
+        SetPenColor("Red");
+        DrawTextString(stateText);
+    }
 }
 
 //随机产生地图
@@ -331,6 +342,8 @@ void runtime()
             {
                 gold *cur = got->data;
                 score += scoreMap[cur->type];
+                startTimer(scoreTimer, refreshInterval);
+                lastScore = scoreMap[cur->type];
                 linkGold = delNode(linkGold, got);
                 got = NULL;
             }
@@ -353,6 +366,28 @@ void runtime()
     SetPenSize(1);
 }
 
+//处理分数提示
+void handleScore()
+{
+    static double delta = 0;
+    static double dps = 0.001;
+    
+    newScoreX = width / 2;
+    newScoreY = height * boardRatio + delta;
+
+    delta += dps;
+
+    if (delta >= 0.1)
+    {
+        delta = 0;
+        newScoreX = width / 2;
+        newScoreY = height * boardRatio;
+
+        lastScore = 0;
+        cancelTimer(scoreTimer);
+    }
+}
+
 //根据时间执行
 void moniter(int timerID) 
 {
@@ -372,6 +407,10 @@ void moniter(int timerID)
         disableButton(pause);
         score = 0;
         initStartPage();
+        break;
+
+    case scoreTimer:
+        handleScore();
         break;
     }
 }
